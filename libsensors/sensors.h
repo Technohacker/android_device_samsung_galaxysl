@@ -75,7 +75,7 @@ __BEGIN_DECLS
 #define CONVERT_A_Z                 (CONVERT_A)
 
 // conversion of magnetic data to uT units
-#define RANGE_M                     300.0f
+#define RANGE_M                     2000.0f
 #define RESOLUTION_M                (RANGE_M/(512))
 #define CONVERT_M                   (1.0f/1000.0f)
 #define CONVERT_M_X                 (CONVERT_M)

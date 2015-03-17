@@ -293,8 +293,6 @@ void CameraHardware::initDefaultParameters(int CameraID)
         parameterString.append(",");
         parameterString.append(CameraParameters::SCENE_MODE_CANDLELIGHT);
         parameterString.append(",");
-        parameterString.append(CameraParameters::SCENE_MODE_ASD);
-        parameterString.append(",");
         parameterString.append("backlight,dusk-dawn,text,fall-color");
         p.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
               parameterString.string());
@@ -1338,9 +1336,6 @@ status_t CameraHardware::setParameters(const CameraParameters& params)
             } else if (!strcmp(new_scene_mode_str,
                                (const char*)CameraParameters::SCENE_MODE_CANDLELIGHT)) {
                 new_scene_mode = SCENE_MODE_CANDLELIGHT;
-            } else if (!strcmp(new_scene_mode_str,
-                               (const char*)CameraParameters::SCENE_MODE_ASD)) {
-                new_scene_mode = SCENE_MODE_ASD;
             } else if (!strcmp(new_scene_mode_str,
                                (const char*)CameraParameters::SCENE_MODE_PARTY)) {
                 new_scene_mode = SCENE_MODE_INDOORS;

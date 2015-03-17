@@ -18,7 +18,6 @@
 import common
 import os
 
-LOCAL_DIR = os.path.dirname(os.path.abspath(__file__))
 TARGET_DIR = os.getenv('OUT')
 UTILITIES_DIR = os.path.join(TARGET_DIR, 'utilities')
 
@@ -30,32 +29,32 @@ def FullOTA_Assertions(info):
   info.output_zip.write(os.path.join(UTILITIES_DIR, "flash_image"), "flash_image")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "erase_image"), "erase_image")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "bml_over_mtd"), "bml_over_mtd")
-  info.output_zip.write(os.path.join(LOCAL_DIR, "bml_over_mtd.sh"), "bml_over_mtd.sh")
+  info.output_zip.write(os.path.join(TARGET_DIR, "bml_over_mtd.sh"), "bml_over_mtd.sh")
 
   info.script.AppendExtra(
         ('package_extract_file("modem.bin", "/tmp/modem.bin");\n'
-         'set_perm(0, 0, 0777, "/tmp/modem.bin");'))
+         'set_metadata("/tmp/modem.bin", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
         ('package_extract_file("updater.sh", "/tmp/updater.sh");\n'
-         'set_perm(0, 0, 0777, "/tmp/updater.sh");'))
+         'set_metadata("/tmp/updater.sh", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
        ('package_extract_file("make_ext4fs", "/tmp/make_ext4fs");\n'
-        'set_perm(0, 0, 0777, "/tmp/make_ext4fs");'))
+        'set_metadata("/tmp/make_ext4fs", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
         ('package_extract_file("busybox", "/tmp/busybox");\n'
-         'set_perm(0, 0, 0777, "/tmp/busybox");'))
+         'set_metadata("/tmp/busybox", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
         ('package_extract_file("flash_image", "/tmp/flash_image");\n'
-         'set_perm(0, 0, 0777, "/tmp/flash_image");'))
+         'set_metadata("/tmp/flash_image", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
         ('package_extract_file("erase_image", "/tmp/erase_image");\n'
-         'set_perm(0, 0, 0777, "/tmp/erase_image");'))
+         'set_metadata("/tmp/erase_image", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
         ('package_extract_file("bml_over_mtd", "/tmp/bml_over_mtd");\n'
-         'set_perm(0, 0, 0777, "/tmp/bml_over_mtd");'))
+         'set_metadata("/tmp/bml_over_mtd", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
         ('package_extract_file("bml_over_mtd.sh", "/tmp/bml_over_mtd.sh");\n'
-         'set_perm(0, 0, 0777, "/tmp/bml_over_mtd.sh");'))
+         'set_metadata("/tmp/bml_over_mtd.sh", "uid", 0, "gid", 0, "mode", 0777);'))
 
   info.script.AppendExtra('package_extract_file("boot.img", "/tmp/boot.img");')
   info.script.AppendExtra('assert(run_program("/tmp/updater.sh") == 0);')

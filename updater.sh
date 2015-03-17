@@ -157,6 +157,9 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /data /dev/block/mmcblk0p3
     /tmp/erase_image system
 
+    # restart into recovery so the user can install further packages before booting
+    /tmp/busybox touch /cache/.startrecovery
+
     if $IS_GSM ; then
         # restore efs backup
         if /tmp/busybox test -e /sdcard/backup/efs/nv_data.bin ; then

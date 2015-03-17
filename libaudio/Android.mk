@@ -18,6 +18,11 @@ LOCAL_SHARED_LIBRARIES:= \
 LOCAL_WHOLE_STATIC_LIBRARIES := libaudiohw_legacy
 LOCAL_MODULE_TAGS := optional
 
+LOCAL_CFLAGS := \
+	-Wno-missing-field-initializers \
+	-Wno-unused-parameter \
+	-Wno-extra
+
 LOCAL_SHARED_LIBRARIES += libdl liblog
 LOCAL_C_INCLUDES += \
 	external/tinyalsa/include \

@@ -251,6 +251,13 @@ AudioStreamOut* AudioHardware::openOutputStream(
     return out.get();
 }
 
+AudioStreamOut* AudioHardware::openOutputStreamWithFlags(
+    uint32_t devices, audio_output_flags_t flags, int *format,
+    uint32_t *channels, uint32_t *sampleRate, status_t *status)
+{
+    return openOutputStream(devices, format, channels, sampleRate, status);
+}
+
 void AudioHardware::closeOutputStream(AudioStreamOut* out) {
     sp <AudioStreamOutALSA> spOut;
     sp<AudioStreamInALSA> spIn;
@@ -1872,7 +1879,7 @@ ssize_t AudioHardware::AudioStreamInALSA::processFrames(void* buffer, ssize_t fr
                 {mProcBuf}
         };
         audio_buffer_t outBuf = {
-                frames - framesWr,
+                (size_t)(frames - framesWr),
                 {(int16_t *)buffer + framesWr * mChannelCount}
         };
 

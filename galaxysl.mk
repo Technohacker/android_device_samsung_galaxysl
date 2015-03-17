@@ -22,6 +22,7 @@ PRODUCT_COPY_FILES += \
 	device/samsung/galaxysl/init.latona.rc:root/init.latona.rc \
 	device/samsung/galaxysl/init.latona.usb.rc:root/init.latona.usb.rc \
 	device/samsung/galaxysl/fstab.latona:root/fstab.latona \
+	device/samsung/galaxysl/twrp.fstab:recovery/root/etc/twrp.fstab \
 	device/samsung/galaxysl/lpm.rc:root/lpm.rc \
 	device/samsung/galaxysl/lpm.rc:recovery/root/lpm.rc \
 	device/samsung/galaxysl/ueventd.latona.rc:root/ueventd.latona.rc \
@@ -78,6 +79,9 @@ PRODUCT_COPY_FILES += \
 
 # configuration files
 PRODUCT_COPY_FILES += \
+    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
     device/samsung/galaxysl/etc/media_profiles.xml:system/etc/media_profiles.xml \
     device/samsung/galaxysl/etc/media_codecs.xml:system/etc/media_codecs.xml
 
@@ -125,7 +129,6 @@ PRODUCT_PACKAGES := \
     libbt-vendor \
     bootmenu_busybox \
     SamsungServiceMode \
-    hostapd.conf \
     DeviceParts
 
 # Charger
@@ -154,62 +157,24 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
 	device/samsung/galaxysl/libaudio/audio_policy.conf:system/etc/audio_policy.conf
 
-# HWComposer
-PRODUCT_PACKAGES += hwcomposer.omap3
-
 #Camera
 PRODUCT_PACKAGES += camera.latona
 
 #Power
 PRODUCT_PACKAGES += power.latona
 
-# OMX stuff
-PRODUCT_PACKAGES += \
-    libstagefrighthw \
-    libbridge \
-    cexec.out \
-    libPERF \
-    libOMX_Core \
-    libLCML \
-    libion \
-    libtiutils \
-    libomap_mm_library_jni \
-    libOMX.TI.Video.Decoder \
-    libOMX.TI.Video.encoder \
-    libOMX.TI.WBAMR.decode \
-    libOMX.TI.AAC.encode \
-    libOMX.TI.G722.decode \
-    libOMX.TI.MP3.decode \
-    libOMX.TI.WMA.decode \
-    libOMX.TI.Video.encoder \
-    libOMX.TI.WBAMR.encode \
-    libOMX.TI.G729.encode \
-    libOMX.TI.AAC.decode \
-    libOMX.TI.VPP \
-    libOMX.TI.G711.encode \
-    libOMX.TI.JPEG.encoder \
-    libOMX.TI.G711.decode \
-    libOMX.TI.ILBC.decode \
-    libOMX.TI.ILBC.encode \
-    libOMX.TI.AMR.encode \
-    libOMX.TI.G722.encode \
-    libOMX.TI.JPEG.decoder \
-    libOMX.TI.G726.encode \
-    libOMX.TI.G729.decode \
-    libOMX.TI.Video.Decoder \
-    libOMX.TI.AMR.decode \
-    libOMX.TI.G726.decode
-
-#ITTIAM OMX
-PRODUCT_PACKAGES += \
-    libOMX.TI.720P.Decoder \
-    libOMX.TI.720P.Encoder
-
 # Script to edit the shipped nvs file to insert the device's assigned MAC
 # address
 PRODUCT_PACKAGES += store-mac-addr.sh
 
-# WIFI Firmwares
+# WIFI
+PRODUCT_PACKAGES += \
+    hostapd \
+    dhcpcd.conf \
+    libwpa_client \
+    wpa_supplicant \
+    wpa_supplicant.conf
+
 PRODUCT_PACKAGES += \
     wl127x-fw-4-sr.bin \
     wl127x-fw-4-mr.bin \
@@ -235,7 +200,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
        wifi.interface=wlan0 \
        wifi.supplicant_scan_interval=180 \
        ro.telephony.ril_class=SamsungExynos3RIL \
-       ro.telephony.ril.v3=icccardstatus,datacall,signalstrength,facilitylock \
+       ro.telephony.ril.config=icccardstatus,datacall,signalstrength,facilitylock \
        ro.telephony.call_ring.multiple=false \
        ro.telephony.call_ring.delay=2000 \
        mobiledata.interfaces=pdp0,eth0,gprs,ppp0
@@ -269,6 +234,18 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
         dalvik.vm.dexopt-data-only=1
 
+# ART
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.dex2oat-Xms=8m \
+    dalvik.vm.dex2oat-Xmx=96m \
+    dalvik.vm.image-dex2oat-Xms=48m \
+    dalvik.vm.image-dex2oat-Xmx=48m \
+    dalvik.vm.dex2oat-filter=interpret-only \
+    dalvik.vm.image-dex2oat-filter=speed
+
+# ART
+PRODUCT_DEX_PREOPT_DEFAULT_FLAGS := \
+    --compiler-filter=interpret-only
 
 # Override /proc/sys/vm/dirty_ratio on UMS
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -302,4 +279,6 @@ device/samsung/galaxysl/bml_over_mtd.sh:bml_over_mtd.sh
 # half of the device-specific product definition file takes care
 # of the aspects that require proprietary drivers that aren't
 # commonly available
+$(call add-product-dex-preopt-module-config,services,--compiler-filter=speed)
+$(call inherit-product, hardware/ti/omap3/omap3.mk)
 $(call inherit-product, vendor/samsung/galaxysl/galaxysl-vendor.mk)

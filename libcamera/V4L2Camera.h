@@ -40,7 +40,7 @@
 #include "v4l2-mediabus.h"
 #include "v4l2-subdev.h"
 
-#include <videodev2.h>
+#include <linux/videodev2.h>
 #define LOG_FUNCTION_START    ALOGD("%d: %s() ENTER", __LINE__, __FUNCTION__);
 #define LOG_FUNCTION_EXIT    ALOGD("%d: %s() EXIT", __LINE__, __FUNCTION__);
 

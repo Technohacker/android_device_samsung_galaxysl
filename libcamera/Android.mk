@@ -14,7 +14,9 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_C_INCLUDES += \
     $(LOCAL_PATH)/../include/ \
+    system/media/camera/include \
     hardware/ti/omap3/dspbridge/inc \
+    hardware/ti/omap3/hwc \
     hardware/ti/omap3/omx/system/src/openmax_il/lcml/inc \
     hardware/ti/omap3/omx/system/src/openmax_il/omx_core/inc \
     hardware/ti/omap3/omx/system/src/openmax_il/common/inc \

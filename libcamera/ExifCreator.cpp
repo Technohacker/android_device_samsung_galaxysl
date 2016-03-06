@@ -1,7 +1,7 @@
 #define LOG_TAG "ExifCreator"
 
 #include <utils/Log.h>
-
+#include <string.h>
 
 
 #include "ExifCreator.h"

@@ -264,7 +264,7 @@ private:
         virtual String8 getParameters(const String8& keys);
         uint32_t device() { return mDevices; }
         virtual status_t getRenderPosition(uint32_t *dspFrames);
-	virtual status_t getPresentationPosition(uint64_t *frames, struct timespec *timestamp);
+	//virtual status_t getPresentationPosition(uint64_t *frames, struct timespec *timestamp);
 
                 void doStandby_l();
                 void close_l();

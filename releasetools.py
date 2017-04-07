@@ -22,6 +22,7 @@ TARGET_DIR = os.getenv('OUT')
 UTILITIES_DIR = os.path.join(TARGET_DIR, 'utilities')
 
 def FullOTA_Assertions(info):
+  info.output_zip.write(os.path.join(TARGET_DIR, "custom-boot.img"), "boot.img")
   info.output_zip.write(os.path.join(TARGET_DIR, "modem.bin"), "modem.bin")
   info.output_zip.write(os.path.join(TARGET_DIR, "updater.sh"), "updater.sh")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "make_ext4fs"), "make_ext4fs")

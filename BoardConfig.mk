@@ -16,8 +16,6 @@ TARGET_ARCH_LOWMEM := true
 TARGET_GLOBAL_CFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
 
-COMMON_GLOBAL_CFLAGS += -DOMAP_ENHANCEMENT -DTARGET_OMAP3
-
 TARGET_BOOTANIMATION_TEXTURE_CACHE := false
 TARGET_BOOTANIMATION_USE_RGB565 := true
 
@@ -36,13 +34,13 @@ TARGET_SPECIFIC_HEADER_PATH := device/samsung/galaxysl/include
 
 BOARD_CUSTOM_BOOTIMG := true
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/galaxysl/shbootimg.mk
-TARGET_SYSTEMIMAGE_USE_SQUISHER := true
 
 # Bionic
 TARGET_NEEDS_BIONIC_MD5 := true
 TARGET_NEEDS_BIONIC_PRELINK_SUPPORT := true
+TARGET_NEEDS_PLATFORM_TEXTRELS := true
 TARGET_NEEDS_NON_PIE_SUPPORT := true
-MALLOC_IMPL := dlmalloc
+MALLOC_SVELTE := true
 
 # Inline kernel building config
 TARGET_KERNEL_CONFIG := latona_defconfig
@@ -76,7 +74,8 @@ TW_BRIGHTNESS_PATH := "/sys/class/backlight/omap_bl/brightness"
 
 # fix this up by examining /proc/mtd on a running device
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 454557696
+# BOARD_SYSTEMIMAGE_PARTITION_SIZE := 454557696
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 943718400
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2013200384
 BOARD_FLASH_BLOCK_SIZE := 4096
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -97,8 +96,8 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/galaxysl/bluetooth
 # Egl
 TARGET_DISABLE_TRIPLE_BUFFERING := true
 BOARD_EGL_CFG := device/samsung/galaxysl/egl.cfg
-USE_OPENGL_RENDERER := true
-COMMON_GLOBAL_CFLAGS += -DHAS_CONTEXT_PRIORITY -DDONT_USE_FENCE_SYNC
+TARGET_HAS_CONTEXT_PRIORITY := true
+TARGET_DOESNT_USE_FENCE_SYNC := true
 BOARD_EGL_WORKAROUND_BUG_10194508 := true
 
 # HWC
@@ -130,7 +129,9 @@ BOARD_USES_GENERIC_AUDIO := false
 
 # RIL
 BOARD_RIL_CLASS := ../../../hardware/samsung/exynos3/s5pc110/ril/
-BOARD_PROVIDES_RILD := true
+# FIXME: Fake RIL Variant
+TARGET_RIL_VARIANT := foobar
+# BOARD_PROVIDES_RILD := true
 
 # FM Radio
 BOARD_HAVE_FM_RADIO := true
@@ -154,7 +155,6 @@ BOARD_SOFTAP_DEVICE := wl12xx_mac80211
 WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/wl12xx_sdio.ko"
 WIFI_DRIVER_MODULE_NAME := "wl12xx_sdio"
 WIFI_FIRMWARE_LOADER := ""
-COMMON_GLOBAL_CFLAGS += -DUSES_TI_MAC80211
 endif
 
 # Torch
@@ -163,15 +163,15 @@ USE_NO_TORCH := true
 TARGET_MODULES_SOURCE := "hardware/ti/wlan/mac80211/compat_wl12xx"
 
 WIFI_MODULES:
-	make -C $(TARGET_MODULES_SOURCE) KERNEL_DIR=$(KERNEL_OUT) KLIB=$(KERNEL_OUT) KLIB_BUILD=$(KERNEL_OUT) ARCH=$(TARGET_ARCH) $(ARM_CROSS_COMPILE)
+	make -C $(TARGET_MODULES_SOURCE) KERNEL_DIR=$(KERNEL_OUT) KLIB=$(KERNEL_OUT) KLIB_BUILD=$(KERNEL_OUT) ARCH=arm CROSS_COMPILE=" arm-eabi-"
 	mv hardware/ti/wlan/mac80211/compat_wl12xx/net/mac80211/mac80211.ko $(KERNEL_MODULES_OUT)
 	mv hardware/ti/wlan/mac80211/compat_wl12xx/net/wireless/cfg80211.ko $(KERNEL_MODULES_OUT)
 	mv hardware/ti/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx.ko $(KERNEL_MODULES_OUT)
 	mv hardware/ti/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx_sdio.ko $(KERNEL_MODULES_OUT)
-	$(ARM_EABI_TOOLCHAIN)/arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/mac80211.ko \
+	arm-eabi-strip --strip-debug $(KERNEL_MODULES_OUT)/mac80211.ko \
 		 $(KERNEL_MODULES_OUT)/cfg80211.ko $(KERNEL_MODULES_OUT)/wl12xx.ko \
 		 $(KERNEL_MODULES_OUT)/wl12xx_sdio.ko
 
-TARGET_KERNEL_MODULES := WIFI_MODULES
+# TARGET_KERNEL_MODULES := WIFI_MODULES
 
 TARGET_OTA_ASSERT_DEVICE := galaxysl,GT-I9003,GT-I9003L

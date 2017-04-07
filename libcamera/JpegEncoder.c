@@ -80,14 +80,18 @@ int bPreempted=0;
 OMX_BOOL bError = OMX_FALSE;
 
 /*function prototypes */
-inline int maxint(int a, int b);
+/* FIXME: inline int maxint(int a, int b); */
+int maxint(int a, int b);
 
 /*Routine to get the maximum of 2 integers */
-inline int maxint(int a, int b)
+/* FIXME: inline int maxint(int a, int b)
+{
+    return(a>b) ? a : b;
+} */
+int maxint(int a, int b)
 {
     return(a>b) ? a : b;
 }
-
 static OMX_ERRORTYPE WaitForState(OMX_HANDLETYPE* pHandle,
                                   OMX_STATETYPE DesiredState)
 {

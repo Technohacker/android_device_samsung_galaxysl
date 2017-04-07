@@ -31,7 +31,7 @@
 
 #include <binder/MemoryBase.h>
 #include <binder/MemoryHeapBase.h>
-#include <linux/videodev.h>
+//#include <linux/videodev.h>
 #include <utils/Log.h>
 
 #include <hardware/camera.h>

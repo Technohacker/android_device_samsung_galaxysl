@@ -28,7 +28,7 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/select.h>
-#include <linux/videodev.h>
+//#include <linux/videodev.h>
 
 extern int version;
 

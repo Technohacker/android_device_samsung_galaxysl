@@ -139,8 +139,8 @@
         <item>7</item>
     </integer-array>
 
-    <!-- Boolean indicating whether Softap requires reloading AP firmware -->
-    <bool name="config_wifiApFirmwareReload">false</bool>
+    <!-- FIXME: Boolean indicating whether Softap requires reloading AP firmware -->
+    <!-- <bool name="config_wifiApFirmwareReload">false</bool> -->
 
     <!-- Minimum screen brightness allowed by the power manager. -->
     <integer name="config_screenBrightnessDim">10</integer>
@@ -159,8 +159,8 @@
          kill the foreground app. -->
     <integer name="config_backKillTimeout">1500</integer>
 
-    <!--Boolean to enable stk functionality on Samsung phones-->
-    <bool name="config_samsung_stk">true</bool>
+    <!--FIXME: Boolean to enable stk functionality on Samsung phones-->
+    <!-- <bool name="config_samsung_stk">true</bool> -->
 
     <!-- Hardware 'face' keys present on the device, stored as a bit field.
          This integer should equal the sum of the corresponding value for each

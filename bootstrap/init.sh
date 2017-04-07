@@ -11,12 +11,12 @@ busybox mount -t sysfs sysfs /sys
 
 busybox mount -t yaffs2 /dev/block/mtdblock2 /system
 
-RAMDISK=ramdisk.cpio
+RAMDISK=ramdisk.cpio.xz
 
 if busybox test -e /cache/.startrecovery || busybox grep -q bootmode=2 /proc/cmdline || busybox grep -q androidboot.mode=reboot_recovery /proc/cmdline ; then
 	# recovery boot
 	busybox rm -fr /cache/.startrecovery
-	RAMDISK=ramdisk-recovery.cpio
+	RAMDISK=ramdisk-recovery.cpio.xz
 
 elif ! busybox test -e /system/build.prop ; then
 	# emergency boot
@@ -37,14 +37,14 @@ elif ! busybox test -e /system/build.prop ; then
 		busybox echo "install_zip(\"`echo $UPDATE`\");" > /cache/recovery/extendedcommand
 	fi
 
-	RAMDISK=ramdisk-recovery.cpio
+	RAMDISK=ramdisk-recovery.cpio.xz
 
 	busybox umount /sdcard
 fi
 
 busybox umount /system
 
-busybox cpio -i < ${RAMDISK}
+busybox unxz -c ${RAMDISK} | busybox cpio -i
 
 if busybox grep -q bootmode=5 /proc/cmdline || busybox grep -q androidboot.mode=usb_charger /proc/cmdline ; then
 	# charging mode
@@ -56,8 +56,8 @@ busybox umount /sys
 busybox umount /proc
 busybox date >>boot.txt
 
-busybox rm -fr ramdisk.cpio
-busybox rm -fr ramdisk-recovery.cpio
+busybox rm -fr ramdisk.cpio.xz || true
+busybox rm -fr ramdisk-recovery.cpio.xz || true
 
 busybox rm -fr /stage1 /dev/*
 

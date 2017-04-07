@@ -1,0 +1,26 @@
+[{
+    "remote": "github",
+    "repository": "Technohacker/android_kernel_samsung_latona",
+    "target_path": "kernel/samsung/latona",
+    "revision": "android-7.1"
+}, {
+    "remote": "github",
+    "repository": "omnirom/android_packages_apps_SamsungServiceMode",
+    "target_path": "packages/apps/SamsungServiceMode",
+    "revision": "android-6.0"
+}, {
+    "remote": "github",
+    "repository": "omnirom/android_hardware_samsung",
+    "target_path": "hardware/samsung",
+    "revision": "android-6.0"
+}, {
+    "remote": "github",
+    "repository": "unfinite/android_hardware_ti_omap3",
+    "target_path": "hardware/ti/omap3",
+    "revision": "lollipop"
+}, {
+    "remote": "github",
+    "repository": "omnirom/android_hardware_ti_wlan",
+    "target_path": "hardware/ti/wlan",
+    "revision": "android-6.0"
+}]

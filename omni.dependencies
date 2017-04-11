@@ -23,4 +23,9 @@
     "repository": "omnirom/android_hardware_ti_wlan",
     "target_path": "hardware/ti/wlan",
     "revision": "android-6.0"
+}, {
+    "remote": "github",
+    "repository": "omnirom/android_hardware_ti_wpan",
+    "target_path": "hardware/ti/wpan",
+    "revision": "android-5.1"
 }]

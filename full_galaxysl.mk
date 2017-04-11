@@ -22,7 +22,8 @@
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 $(call inherit-product, device/samsung/galaxysl/galaxysl.mk)
-$(call inherit-product, build/target/product/full.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/board/generic/device.mk)
 
 # Galaxy SL uses high-density artwork where available
 PRODUCT_LOCALES += hdpi

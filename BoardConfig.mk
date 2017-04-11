@@ -39,7 +39,7 @@ BOARD_CUSTOM_BOOTIMG_MK := device/samsung/galaxysl/shbootimg.mk
 TARGET_NEEDS_BIONIC_MD5 := true
 TARGET_NEEDS_BIONIC_PRELINK_SUPPORT := true
 TARGET_NEEDS_PLATFORM_TEXTRELS := true
-TARGET_NEEDS_NON_PIE_SUPPORT := true
+TARGET_ENABLE_NON_PIE_SUPPORT := true
 MALLOC_SVELTE := true
 
 # Inline kernel building config

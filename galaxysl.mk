@@ -129,7 +129,8 @@ PRODUCT_PACKAGES := \
     libbt-vendor \
     bootmenu_busybox \
     SamsungServiceMode \
-    DeviceParts
+    DeviceParts \
+    librilshm
 
 # Charger
 PRODUCT_PACKAGES += \

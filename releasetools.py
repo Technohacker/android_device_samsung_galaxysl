@@ -22,7 +22,6 @@ TARGET_DIR = os.getenv('OUT')
 UTILITIES_DIR = os.path.join(TARGET_DIR, 'utilities')
 
 def FullOTA_Assertions(info):
-  info.output_zip.write(os.path.join(TARGET_DIR, "custom-boot.img"), "boot.img")
   info.output_zip.write(os.path.join(TARGET_DIR, "modem.bin"), "modem.bin")
   info.output_zip.write(os.path.join(TARGET_DIR, "updater.sh"), "updater.sh")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "make_ext4fs"), "make_ext4fs")
@@ -61,5 +60,6 @@ def FullOTA_Assertions(info):
   info.script.AppendExtra('assert(run_program("/tmp/updater.sh") == 0);')
 
 def FullOTA_InstallEnd(info):
+  info.output_zip.write(os.path.join(TARGET_DIR, "custom-boot.img"), "boot.img")
   # Remove writing boot.img from script (we do it in updater.sh)
   info.script.script = [cmd for cmd in info.script.script if not "write_raw_image" in cmd]

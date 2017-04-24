@@ -1,6 +1,5 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- * Copyright (C) 2012 The CyanogenMod Project <http://www.cyanogenmod.org>
+ /*
+ * Copyright (C) 2017 The OmniROM Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef _BDROID_BUILDCFG_H
-#define _BDROID_BUILDCFG_H
-
-#define BTM_DEF_LOCAL_NAME   "GT-I9003"
-#define BLE_INCLUDED FALSE
-#define BTA_GATT_INCLUDED FALSE
-#define SMP_INCLUDED FALSE
-
-#define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE
-
-#endif
+/* status_t Parcel::writeString16 */
+extern "C" int _ZN7android6Parcel13writeString16EPKDsj();
+extern "C" int _ZN7android6Parcel13writeString16EPKtj() {
+    return _ZN7android6Parcel13writeString16EPKDsj();
+}

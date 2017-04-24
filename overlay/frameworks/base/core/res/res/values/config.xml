@@ -187,5 +187,10 @@
 
     <!-- Enable multi user interface -->
     <bool name="config_enableMultiUserUI">true</bool>
+    <bool name="config_button_brightness_support">true</bool>
+    <integer-array name="config_autoBrightnessButtonBacklightValues">
+       <item>1</item>
+       <item>255</item>
+   </integer-array>
 
 </resources>

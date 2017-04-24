@@ -130,9 +130,6 @@ BOARD_USES_GENERIC_AUDIO := false
 
 # RIL
 BOARD_RIL_CLASS := ../../../hardware/samsung/exynos3/s5pc110/ril/
-# FIXME: Fake RIL Variant
-TARGET_RIL_VARIANT := foobar
-# BOARD_PROVIDES_RILD := true
 
 # FM Radio
 BOARD_HAVE_FM_RADIO := true

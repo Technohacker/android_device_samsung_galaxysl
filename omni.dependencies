@@ -20,9 +20,9 @@
     "revision": "lollipop"
 }, {
     "remote": "github",
-    "repository": "omnirom/android_hardware_ti_wlan",
+    "repository": "Technohacker/android_hardware_ti_wlan",
     "target_path": "hardware/ti/wlan",
-    "revision": "android-6.0"
+    "revision": "android-7.1"
 }, {
     "remote": "github",
     "repository": "omnirom/android_hardware_ti_wpan",

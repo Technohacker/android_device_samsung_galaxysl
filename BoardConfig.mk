@@ -140,6 +140,7 @@ BOARD_FM_DEVICE := si4709
 BOARD_HARDWARE_CLASS := device/samsung/galaxysl/cmhw
 
 # Connectivity - Wi-Fi
+KERNEL_HAS_FINIT_MODULE := false
 USES_TI_MAC80211 := true
 ifdef USES_TI_MAC80211
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211

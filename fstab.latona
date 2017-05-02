@@ -11,7 +11,7 @@ system                  /system       yaffs2     defaults                       
 /dev/block/mmcblk0p3    /data      ext4    noatime,nosuid,nodev,errors=panic,discard,noauto_da_alloc    wait,check
 
 /devices/platform/omap/omap_hsmmc.1/mmc_host/*    auto    auto		defaults		voldmanaged=sdcard0:1,nonremovable,noemulatedsd
-/devices/platform/omap/omap_hsmmc.0/mmc_host/*    auto    auto		defaults		voldmanaged=sdcard1:auto
+/devices/platform/omap/omap_hsmmc.0/mmc_host/*    auto    auto		defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 
 # zRAM
 /dev/block/zram0         none          swap      defaults                                                zramsize=134217728

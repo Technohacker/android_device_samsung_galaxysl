@@ -87,7 +87,9 @@ on post-fs-data
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
-    modprobe wl12xx
+    insmod /system/lib/modules/cfg80211.ko
+    insmod /system/lib/modules/mac80211.ko
+    insmod /system/lib/modules/wl12xx.ko
     start store_mac_addr
 
 # Wifi: Disable the IPv6 of p2p0 interface

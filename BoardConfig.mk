@@ -138,6 +138,9 @@ BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 BOARD_FM_DEVICE := si4709
 
+# Lights
+TARGET_PROVIDES_LIBLIGHT := true
+
 # Hardware
 BOARD_HARDWARE_CLASS := device/samsung/galaxysl/cmhw
 

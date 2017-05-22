@@ -1,1 +1,1 @@
-add_lunch_combo omni_galaxysl-userdebug
+add_lunch_combo lineage_galaxysl-userdebug

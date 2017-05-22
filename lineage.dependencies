@@ -1,0 +1,26 @@
+[{
+    "remote": "github",
+    "repository": "Technohacker/android_kernel_samsung_latona",
+    "target_path": "kernel/samsung/latona",
+    "revision": "lineage-14.1"
+}, {
+    "remote": "github",
+    "repository": "LineageOS/android_packages_apps_SamsungServiceMode",
+    "target_path": "packages/apps/SamsungServiceMode",
+    "revision": "cm-14.1"
+}, {
+    "remote": "github",
+    "repository": "LineageOS/android_hardware_samsung",
+    "target_path": "hardware/samsung",
+    "revision": "cm-14.1"
+}, {
+    "remote": "github",
+    "repository": "LineageOS/android_hardware_ti_wlan",
+    "target_path": "hardware/ti/wlan",
+    "revision": "cm-14.1"
+}, {
+    "remote": "github",
+    "repository": "LineageOS/android_hardware_ti_wpan",
+    "target_path": "hardware/ti/wpan",
+    "revision": "cm-14.1"
+}]

@@ -54,25 +54,24 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_USES_BML_OVER_MTD := true
 TARGET_RECOVERY_FSTAB := device/samsung/galaxysl/fstab.latona
 RECOVERY_FSTAB_VERSION := 2
-
-# Android Recovery
-BOARD_HAS_DOWNLOAD_MODE := true
+RECOVERY_VARIANT := twrp
 
 # TWRP Flags
-# TW_THEME := portrait_hdpi
-# TW_NO_REBOOT_BOOTLOADER := true
-# TW_INTERNAL_STORAGE_PATH := "/sdcard"
-# TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard"
-# TW_EXTERNAL_STORAGE_PATH := "/external_sd"
-# TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
-# TW_FLASH_FROM_STORAGE := true
-# TW_EXCLUDE_SUPERSU := true
-# TW_NO_PARTITION_SD_CARD := true
-# TW_NO_EXFAT := true
-# TW_NO_EXFAT_FUSE := true
-# TW_EXCLUDE_ENCRYPTED_BACKUPS := true
-# TW_MAX_BRIGHTNESS := 255
-# TW_BRIGHTNESS_PATH := "/sys/class/backlight/omap_bl/brightness"
+TW_USE_TOOLBOX := true
+TW_THEME := portrait_hdpi
+TW_NO_REBOOT_BOOTLOADER := true
+TW_INTERNAL_STORAGE_PATH := "/sdcard"
+TW_INTERNAL_STORAGE_MOUNT_POINT := "sdcard"
+TW_EXTERNAL_STORAGE_PATH := "/external_sd"
+TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
+TW_FLASH_FROM_STORAGE := true
+TW_EXCLUDE_SUPERSU := true
+TW_NO_PARTITION_SD_CARD := true
+TW_NO_EXFAT := true
+TW_NO_EXFAT_FUSE := true
+TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+TW_MAX_BRIGHTNESS := 255
+TW_BRIGHTNESS_PATH := "/sys/class/backlight/omap_bl/brightness"
 
 # fix this up by examining /proc/mtd on a running device
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608

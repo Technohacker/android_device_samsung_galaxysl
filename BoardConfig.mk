@@ -39,7 +39,7 @@ BOARD_CUSTOM_BOOTIMG_MK := device/samsung/galaxysl/shbootimg.mk
 
 # Bionic
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-LINKER_NON_PIE_EXECUTABLES_HEADER_DIR := include/non-pie.h
+LINKER_NON_PIE_EXECUTABLES_HEADER_DIR := $(call my-dir)/include/
 MALLOC_SVELTE := true
 
 # Inline kernel building config

@@ -131,7 +131,7 @@ endif
 BOARD_USES_GENERIC_AUDIO := false
 
 # RIL
-BOARD_RIL_CLASS := ../../../hardware/samsung/exynos3/s5pc110/ril/
+BOARD_RIL_CLASS := ril/
 
 # FM Radio
 BOARD_HAVE_FM_RADIO := true

@@ -280,6 +280,10 @@ device/samsung/galaxysl/bml_over_mtd.sh:bml_over_mtd.sh
 PRODUCT_PACKAGES += \
 	hwcomposer.omap3
 
+# Samsung Open Source libsecril-client
+PRODUCT_PACKAGES += \
+	libsecril-client
+
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
 # of the aspects that require proprietary drivers that aren't

@@ -1,0 +1,81 @@
+From 75623fed53dde17fff8baf4ac14494048965c9bc Mon Sep 17 00:00:00 2001
+From: Mykola Ostrovskyy <mykola@ti.com>
+Date: Tue, 8 Apr 2014 14:15:42 -0500
+Subject: [PATCH 1/2] HWComposer: Prevent FB de-allocation with HWC 1.1+
+
+Even though HWComposer will not use FB HAL functionality when
+working with newer HWC API, the FB instance should be keept alive
+to prevent destruction of flip chain.
+
+Change-Id: I606873fc5d03f676d3a256269e8503d5de5df43e
+Signed-off-by: Mykola Ostrovskyy <mykola@ti.com>
+---
+ services/surfaceflinger/DisplayHardware/HWComposer_hwc1.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/services/surfaceflinger/DisplayHardware/HWComposer_hwc1.cpp b/services/surfaceflinger/DisplayHardware/HWComposer_hwc1.cpp
+index 317f948d1..7d09567fa 100644
+--- a/services/surfaceflinger/DisplayHardware/HWComposer_hwc1.cpp
++++ b/services/surfaceflinger/DisplayHardware/HWComposer_hwc1.cpp
+@@ -119,6 +119,10 @@ HWComposer::HWComposer(
+     int fberr = loadFbHalModule();
+     loadHwcModule();
+ 
++#ifdef OMAP_ENHANCEMENT
++    // FB HAL must stay open independent of HWC API version. Closing FB HAL will
++    // result in destruction of flip chain and de-allocation of framebuffer.
++#else
+     if (mFbDev && mHwc && hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1)) {
+         // close FB HAL if we don't needed it.
+         // FIXME: this is temporary until we're not forced to open FB HAL
+@@ -126,6 +130,7 @@ HWComposer::HWComposer(
+         framebuffer_close(mFbDev);
+         mFbDev = NULL;
+     }
++#endif
+ 
+     // If we have no HWC, or a pre-1.1 HWC, an FB dev is mandatory.
+     if ((!mHwc || !hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1))
+@@ -174,7 +179,11 @@ HWComposer::HWComposer(
+         }
+     }
+ 
++#ifdef OMAP_ENHANCEMENT
++    if (!mHwc || !hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1)) {
++#else
+     if (mFbDev) {
++#endif
+         ALOG_ASSERT(!(mHwc && hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1)),
+                 "should only have fbdev if no hwc or hwc is 1.0");
+ 
+-- 
+2.13.0
+
+From f368febd125bc22a474981e0eac13258eeb46775 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?D=2E=20Andrei=20M=C4=83ce=C8=99?= <dmaces@nd.edu>
+Date: Sun, 23 Oct 2016 03:08:52 -0400
+Subject: [PATCH 2/2] SF: HWC1: Propagate the OMAP_ENHANCEMENT flag
+
+Change-Id: I96fe0afc740abae79c6ebc7b7af1e3d2b22b4704
+---
+ services/surfaceflinger/Android.mk | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/services/surfaceflinger/Android.mk b/services/surfaceflinger/Android.mk
+index 18cc946be..a5fe115a0 100644
+--- a/services/surfaceflinger/Android.mk
++++ b/services/surfaceflinger/Android.mk
+@@ -61,6 +61,10 @@ else
+     LOCAL_SRC_FILES += \
+         SurfaceFlinger_hwc1.cpp \
+         DisplayHardware/HWComposer_hwc1.cpp
++
++    ifeq ($(OMAP_ENHANCEMENT),true)
++        LOCAL_CFLAGS += -DOMAP_ENHANCEMENT
++    endif
+ endif
+ 
+ ifeq ($(TARGET_BOARD_PLATFORM),omap4)
+-- 
+2.13.0
+

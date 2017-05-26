@@ -139,6 +139,8 @@
         <item>7</item>
     </integer-array>
 
+    <string translatable="false" name="config_radio_access_family">GSM|WCDMA</string>
+
     <!-- FIXME: Boolean indicating whether Softap requires reloading AP firmware -->
     <!-- <bool name="config_wifiApFirmwareReload">false</bool> -->
 
@@ -187,5 +189,4 @@
 
     <!-- Enable multi user interface -->
     <bool name="config_enableMultiUserUI">true</bool>
-
 </resources>

@@ -98,7 +98,7 @@ PRODUCT_COPY_FILES += \
        device/samsung/galaxysl/usr/keylayout/twl4030-keypad.kl:system/usr/keylayout/twl4030-keypad.kl \
        device/samsung/galaxysl/usr/keylayout/zeus_key.kl:system/usr/keylayout/zeus_key.kl \
        device/samsung/galaxysl/usr/keylayout/atmel_mxt_ts.kl:system/usr/keylayout/atmel_mxt_ts.kl
- 
+
  # IDC file for Touchscreen Calibration
 PRODUCT_COPY_FILES += \
        device/samsung/galaxysl/usr/idc/atmel_mxt_ts.idc:system/usr/idc/atmel_mxt_ts.idc

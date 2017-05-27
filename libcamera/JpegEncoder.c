@@ -25,13 +25,13 @@
 /*utilities includes */
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h> 
-#include <string.h> 
-#include <sched.h> 
-#include <unistd.h> 
-#include <sys/types.h> 
+#include <stdarg.h>
+#include <string.h>
+#include <sched.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <sys/select.h>
-#include <time.h> 
+#include <time.h>
 //#include <mcheck.h>
 #include <getopt.h>
 #include <signal.h>
@@ -141,11 +141,11 @@ OMX_ERRORTYPE EventHandler(OMX_HANDLETYPE hComponent,OMX_PTR pAppData,OMX_EVENTT
         ALOGE("Error: From JPEGENC_GetState\n");
     }
     switch ( eEvent ) {
-        
+
         case OMX_EventCmdComplete:
 			sem_post(semaphore) ;
             break;
-            
+
         case OMX_EventError:
                 if (nData1 == OMX_ErrorHardware){
                     ALOGE("\n\nAPP:: ErrorNotification received: Error Num = %p Severity = %ld String  = %s\n", (OMX_PTR)nData1, data2, (OMX_STRING)pEventData);
@@ -183,20 +183,20 @@ OMX_ERRORTYPE EventHandler(OMX_HANDLETYPE hComponent,OMX_PTR pAppData,OMX_EVENTT
     		    bError = OMX_TRUE;
                     DEINIT_FLAG = 1;
                 }
-            sem_post(semaphore) ;    
+            sem_post(semaphore) ;
             break;
-            
+
         case OMX_EventResourcesAcquired:
             bPreempted = 0;
-            break;  
-            
+            break;
+
         case OMX_EventPortSettingsChanged:
         case OMX_EventBufferFlag:
             ALOGE("Event Buffer Flag detected\n");
         case OMX_EventMax:
         case OMX_EventMark:
             break;
-            
+
         default:
                 ALOGE("ErrorNotification received: Error Num %p: String :%s\n", (OMX_PTR)nData1, (OMX_STRING)pEventData);
     }
@@ -221,18 +221,18 @@ void EmptyBufferDone(OMX_HANDLETYPE hComponent, OMX_PTR ptr,
 int fill_data (OMX_BUFFERHEADERTYPE *pBuf, void * inputBuffer, int buffSize)
 {
     int nRead;
-    OMX_U8 oneByte;    
+    OMX_U8 oneByte;
 
 	nRead = buffSize;
-	
+
     memcpy(pBuf->pBuffer, inputBuffer, nRead );
 
     ALOGE ("Buffer Size = %d. Read %d bytes from buffer. \n", (int) nRead, (int)nRead);
-	
+
 	pBuf->nFilledLen=nRead;
 	pBuf->nFlags = OMX_BUFFERFLAG_ENDOFFRAME;
 
-    
+
     return nRead;
 }
 
@@ -254,9 +254,9 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
     int inputformat;
     int qualityfactor;
     int buffertype;
-    sigset_t set;	
+    sigset_t set;
 	int fileSize;
-	
+
 	semaphore = NULL;
 	semaphore = (sem_t*)malloc(sizeof(sem_t)) ;
     sem_init(semaphore, 0x00, 0x00);
@@ -273,7 +273,6 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
     OMX_CONFIG_RECTTYPE sCrop;
 
     OMX_BOOL bConvertion_420pTo422i = OMX_FALSE;
-    JPE_CONVERSION_FLAG_TYPE nConversionFlag = JPE_CONV_NONE;
 
     OMX_BUFFERHEADERTYPE* pInBuff[NUM_OF_BUFFERSJPEG];
     OMX_BUFFERHEADERTYPE* pOutBuff[NUM_OF_BUFFERSJPEG];
@@ -283,7 +282,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
     OMX_U8* pInBuffer[NUM_OF_BUFFERSJPEG];
     OMX_U8* pOutBuffer[NUM_OF_BUFFERSJPEG];
     OMX_BUFFERHEADERTYPE* pBuffer;
-    OMX_BUFFERHEADERTYPE* pBuf;    
+    OMX_BUFFERHEADERTYPE* pBuf;
     int nRead;
     int done;
     OMX_S32 sJPEGEnc_CompID = 300;
@@ -299,11 +298,11 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
     MALLOC(pPortParamType, OMX_PORT_PARAM_TYPE);
     MALLOC(pQfactorType, OMX_IMAGE_PARAM_QFACTORTYPE);
     MALLOC(pQuantizationTable,OMX_IMAGE_PARAM_QUANTIZATIONTABLETYPE);
-    MALLOC(pHuffmanTable, JPEGENC_CUSTOM_HUFFMANTTABLETYPE);    
+    MALLOC(pHuffmanTable, JPEGENC_CUSTOM_HUFFMANTTABLETYPE);
     MALLOC(pInPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
     MALLOC(pOutPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
     MALLOC(imageinfo, IMAGE_INFO);
-    
+
     OMX_CONF_INIT_STRUCT(pPortParamType, OMX_PORT_PARAM_TYPE);
     OMX_CONF_INIT_STRUCT(pQfactorType, OMX_IMAGE_PARAM_QFACTORTYPE);
     OMX_CONF_INIT_STRUCT(pQuantizationTable,OMX_IMAGE_PARAM_QUANTIZATIONTABLETYPE);
@@ -341,7 +340,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
     sCrop.nLeft = 0;
     sCrop.nWidth = 0;
     sCrop.nHeight = 0;
-       
+
 
 	error = TIOMX_Init();
 	if ( error != OMX_ErrorNone ) {
@@ -378,11 +377,11 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 
 	/* save off the "max" of the handles for the selct statement */
 	fdmax = maxint(IpBuf_Pipe[0], OpBuf_Pipe[0]);
-	fdmax = maxint(Event_Pipe[0], fdmax); 
+	fdmax = maxint(Event_Pipe[0], fdmax);
 
 	error = OMX_GetParameter(pHandle, OMX_IndexParamImageInit, pPortParamType);
 	if ( error != OMX_ErrorNone ) {
-	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);        
+	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);
 	    error = OMX_ErrorBadParameter;
 	    goto EXIT;
 	}
@@ -433,7 +432,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 
 	nMultFactor = (nHeight + 16 - 1)/16;
 	nHeightNew = (int)(nMultFactor) * 16;
-	
+
 	pInPortDef->nBufferSize = (nWidthNew * nHeightNew * 2);
 	if (pInPortDef->nBufferSize < 400) {
 	    pInPortDef->nBufferSize = 400;
@@ -441,7 +440,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 
 	error = OMX_SetParameter (pHandle, OMX_IndexParamPortDefinition, pInPortDef);
 	if ( error != OMX_ErrorNone ) {
-	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);        
+	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);
 	    error = OMX_ErrorBadParameter;
 	    goto EXIT;
 	}
@@ -449,7 +448,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	pOutPortDef->nPortIndex = nIndex2;
 	error = OMX_GetParameter(pHandle, OMX_IndexParamPortDefinition, pOutPortDef);
 	if ( error != OMX_ErrorNone ) {
-	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);        
+	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);
 	    error = OMX_ErrorBadParameter;
 	    goto EXIT;
 	}
@@ -476,10 +475,10 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 
 	/* OMX_IMAGE_PORTDEFINITION values for input port */
 	pOutPortDef->format.image.cMIMEType = "JPEGENC";
-	pOutPortDef->format.image.pNativeRender = NULL; 
+	pOutPortDef->format.image.pNativeRender = NULL;
 	pOutPortDef->format.image.nFrameWidth = nWidth;
 	pOutPortDef->format.image.nFrameHeight = nHeight;
-	pOutPortDef->format.image.nStride = -1; 
+	pOutPortDef->format.image.nStride = -1;
 	pOutPortDef->format.image.nSliceHeight = -1;
 	pOutPortDef->format.image.bFlagErrorConcealment = OMX_FALSE;
 
@@ -501,7 +500,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 
 	error = OMX_SetParameter (pHandle, OMX_IndexParamPortDefinition, pOutPortDef);
 	if ( error != OMX_ErrorNone ) {
-	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);        
+	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);
 	    error = OMX_ErrorBadParameter;
 	    goto EXIT;
 	}
@@ -509,13 +508,6 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	pComponent = (OMX_COMPONENTTYPE *)pHandle;
 
 	error = OMX_SetConfig(pHandle, OMX_IndexConfigCommonInputCrop, &sCrop);
-	if ( error != OMX_ErrorNone ) {
-	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);            
-	   error = OMX_ErrorBadParameter;
-	   goto EXIT;
-	}
-    
-	error = OMX_SetConfig(pHandle, OMX_IndexCustomConversionFlag, &nConversionFlag);
 	if ( error != OMX_ErrorNone ) {
 	    ALOGE("%d::APP_Error at function call: %x\n", __LINE__, error);
 	   error = OMX_ErrorBadParameter;
@@ -529,7 +521,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	    goto EXIT;
 	}
 
-	    
+
 	for (nCounter = 0; nCounter < NUM_OF_BUFFERSJPEG; nCounter++) {
         OMX_MALLOC_SIZE_DSPALIGN ( pTemp, pInPortDef->nBufferSize,OMX_U8 );
 	    if(pTemp == NULL){
@@ -548,10 +540,10 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	}
 
 	for (nCounter = 0; nCounter < NUM_OF_BUFFERSJPEG; nCounter++) {
-	    error = OMX_UseBuffer(pHandle, &pInBuff[nCounter], nIndex1, (void*)&sJPEGEnc_CompID, pInPortDef->nBufferSize,pInBuffer[nCounter]);  
+	    error = OMX_UseBuffer(pHandle, &pInBuff[nCounter], nIndex1, (void*)&sJPEGEnc_CompID, pInPortDef->nBufferSize,pInBuffer[nCounter]);
 	}
 	for (nCounter = 0; nCounter < NUM_OF_BUFFERSJPEG; nCounter++) {
-	    error = OMX_UseBuffer(pHandle, &pOutBuff[nCounter], nIndex2, (void*)&sJPEGEnc_CompID, pOutPortDef->nBufferSize,pOutBuffer[nCounter]); 
+	    error = OMX_UseBuffer(pHandle, &pOutBuff[nCounter], nIndex2, (void*)&sJPEGEnc_CompID, pOutPortDef->nBufferSize,pOutBuffer[nCounter]);
 	}
 
 	if (imageinfo->bAPP1) {
@@ -613,7 +605,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	    goto EXIT;
 	}
 	pComponent = (OMX_COMPONENTTYPE *)pHandle;
-    
+
 	ALOGD("Waiting for OMX_StateExcecuting\n");
 	error = WaitForState(pHandle, OMX_StateExecuting);
 	if ( error != OMX_ErrorNone ) {
@@ -628,12 +620,12 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 		nRead = fill_data(pInBuff[nCounter], inputBuffer,pInPortDef->nBufferSize);
 		pComponent->FillThisBuffer(pHandle, pOutBuff[nCounter]);
 		pComponent->EmptyThisBuffer(pHandle, pInBuff[nCounter]);
-		framesent++;              
+		framesent++;
 		if (pInBuff[nCounter]->nFlags == OMX_BUFFERFLAG_ENDOFFRAME)
 		    break;
 	}
 
-	while ((error == OMX_ErrorNone) && 
+	while ((error == OMX_ErrorNone) &&
 	        (state != OMX_StateIdle)) {
 
 	        if (bPreempted)
@@ -656,21 +648,21 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	        FD_SET(OpBuf_Pipe[0], &rfds);
 	        FD_SET(Event_Pipe[0], &rfds);
 	        retval = pselect(fdmax+1, &rfds, NULL, NULL, NULL,&set);
-	        if ( retval == -1 ) {      
+	        if ( retval == -1 ) {
 			ALOGE ( " : Error \n");
 			break;
-	        }	
+	        }
 	        else if ( retval == 0 ) {
 			ALOGE("App Timeout !!!!!!!!!!!\n");
 	        }
-			
+
 	        if ( FD_ISSET(Event_Pipe[0], &rfds)) {
-				
+
 	            JPEGE_EVENTPRIVATE EventPrivate;
 	            read(Event_Pipe[0], &EventPrivate, sizeof(JPEGE_EVENTPRIVATE));
-				
+
 	            switch(EventPrivate.eEvent) {
-	                case OMX_EventError:	
+	                case OMX_EventError:
 				if(bError) {
 					error = WaitForState(pHandle, OMX_StateInvalid);
 					if (error != OMX_ErrorNone) {
@@ -678,7 +670,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 						goto EXIT;
 					}
 					ALOGE("APP:: Component is in Invalid state now.\n");
-					goto EXIT;	
+					goto EXIT;
 				}
 				break;
 
@@ -693,7 +685,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 	        }
 
 		if ( FD_ISSET(IpBuf_Pipe[0], &rfds) && !DEINIT_FLAG ) {
-			
+
 			/*read buffer */
 			read(IpBuf_Pipe[0], &pBuffer, sizeof(pBuffer));
 
@@ -704,7 +696,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 			OMX_EmptyThisBuffer(pHandle, pBuffer);
 
 			/*increment count */
-			framesent++;       
+			framesent++;
 	        }
 
 	        if (FD_ISSET(OpBuf_Pipe[0], &rfds)) {
@@ -715,11 +707,11 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
 			/* write data to a file, buffer is assumed to be emptied after this*/
 			ALOGD("JPEG Encoded Length (%d)\n",pBuf->nFilledLen, nframerecieved);
 			fileSize=(int)pBuf->nFilledLen;
-			memcpy(outputBuffer,(void *)pBuf->pBuffer,fileSize); 
+			memcpy(outputBuffer,(void *)pBuf->pBuffer,fileSize);
 			/*increment count and validate for limits; call FillThisBuffer */
 			nframerecieved++;
 			nRepeated++;
-			if (nRepeated >= maxRepeat) {                    
+			if (nRepeated >= maxRepeat) {
 				DEINIT_FLAG = 1;
 			}
 			else {
@@ -750,7 +742,7 @@ int encodeImage(void* outputBuffer, void *inputBuffer, int width, int height, in
                         goto EXIT;
                     }
 	        }
-        
+
 	        if (done == 1) {
                     error = pComponent->GetState(pHandle, &state);
                     if ( error != OMX_ErrorNone ){
@@ -768,11 +760,11 @@ EXIT:
 	FREE(imageinfo);
 	FREE(pQuantizationTable);
 	FREE(pHuffmanTable);
-	
+
 	sem_destroy(semaphore);
-	free(semaphore) ;	
+	free(semaphore) ;
     semaphore=NULL;
-    
+
 	if( error != OMX_ErrorNone){
 		if (buffertype == 1) {
 			for (nCounter = 0; nCounter < NUM_OF_BUFFERSJPEG; nCounter++) {

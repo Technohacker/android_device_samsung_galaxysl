@@ -130,7 +130,7 @@ endif
 BOARD_USES_GENERIC_AUDIO := false
 
 # RIL
-BOARD_RIL_CLASS := ril/
+BOARD_RIL_CLASS := ../../../device/samsung/galaxysl/ril/
 
 # FM Radio
 # BOARD_HAVE_FM_RADIO := true

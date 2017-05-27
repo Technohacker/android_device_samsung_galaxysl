@@ -1,0 +1,173 @@
+From 41de41776148210b6fda3c15bf8c7f3b192fc140 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Sat, 27 May 2017 22:05:16 +0530
+Subject: [PATCH] RIL: remove TelephonyMetrics
+
+It causes NullPointerExceptions in some cases and is not
+necessary for proper functionality
+
+Change-Id: I631a58ea80e36dfcb50b05d015dc13b307859d99
+---
+ src/java/com/android/internal/telephony/RIL.java | 41 ------------------------
+ 1 file changed, 41 deletions(-)
+
+diff --git a/src/java/com/android/internal/telephony/RIL.java b/src/java/com/android/internal/telephony/RIL.java
+index 4101463..8d800d0 100644
+--- a/src/java/com/android/internal/telephony/RIL.java
++++ b/src/java/com/android/internal/telephony/RIL.java
+@@ -302,8 +302,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+     protected Integer mInstanceId;
+     private List<String> mOldRilFeatures;
+ 
+-    private TelephonyMetrics mMetrics = TelephonyMetrics.getInstance();
+-
+     // Number of per-network elements expected in QUERY_AVAILABLE_NETWORKS's response.
+     // 4 elements is default, but many RILs actually return 5, making it impossible to
+     // divide the response array without prior knowledge of the number of elements.
+@@ -526,7 +524,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+                         Object timeoutResponse = getResponseForTimedOutRILRequest(rr);
+                         AsyncResult.forMessage( rr.mResult, timeoutResponse, null);
+                         rr.mResult.sendToTarget();
+-                        mMetrics.writeOnRilTimeoutResponse(mInstanceId, rr.mSerial, rr.mRequest);
+                     }
+ 
+                     decrementWakeLock(rr);
+@@ -1241,8 +1238,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+ 
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+ 
+-        mMetrics.writeRilAnswer(mInstanceId, rr.mSerial);
+-
+         send(rr);
+     }
+ 
+@@ -1452,9 +1447,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+ 
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+ 
+-        mMetrics.writeRilSendSms(mInstanceId, rr.mSerial, SmsSession.Event.Tech.SMS_GSM,
+-                SmsSession.Event.Format.SMS_FORMAT_3GPP);
+-
+         send(rr);
+     }
+ 
+@@ -1468,9 +1460,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+ 
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+ 
+-        mMetrics.writeRilSendSms(mInstanceId, rr.mSerial, SmsSession.Event.Tech.SMS_GSM,
+-                SmsSession.Event.Format.SMS_FORMAT_3GPP);
+-
+         send(rr);
+     }
+ 
+@@ -1523,9 +1512,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+ 
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+ 
+-        mMetrics.writeRilSendSms(mInstanceId, rr.mSerial, SmsSession.Event.Tech.SMS_CDMA,
+-                SmsSession.Event.Format.SMS_FORMAT_3GPP2);
+-
+         send(rr);
+     }
+ 
+@@ -1542,9 +1528,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+ 
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+ 
+-        mMetrics.writeRilSendSms(mInstanceId, rr.mSerial, SmsSession.Event.Tech.SMS_IMS,
+-                SmsSession.Event.Format.SMS_FORMAT_3GPP);
+-
+         send(rr);
+     }
+ 
+@@ -1560,9 +1543,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+ 
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+ 
+-        mMetrics.writeRilSendSms(mInstanceId, rr.mSerial, SmsSession.Event.Tech.SMS_IMS,
+-                SmsSession.Event.Format.SMS_FORMAT_3GPP2);
+-
+         send(rr);
+     }
+ 
+@@ -1766,9 +1746,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+                 + profile + " " + apn + " " + user + " "
+                 + password + " " + authType + " " + protocol);
+ 
+-        mMetrics.writeRilSetupDataCall(mInstanceId, rr.mSerial,
+-                radioTechnology, profile, apn, authType, protocol);
+-
+         send(rr);
+     }
+ 
+@@ -1785,9 +1762,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " +
+                 requestToString(rr.mRequest) + " " + cid + " " + reason);
+ 
+-        mMetrics.writeRilDeactivateDataCall(mInstanceId, rr.mSerial,
+-                cid, reason);
+-
+         send(rr);
+     }
+ 
+@@ -2336,8 +2310,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+                 + " : " + networkType);
+ 
+-        mMetrics.writeSetPreferredNetworkType(mInstanceId, networkType);
+-
+         send(rr);
+     }
+ 
+@@ -3047,9 +3019,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+             }
+         }
+ 
+-        mMetrics.writeOnRilSolicitedResponse(mInstanceId, rr.mSerial, error,
+-                rr.mRequest, ret);
+-
+         return rr;
+     }
+ 
+@@ -3267,9 +3236,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+             case RIL_UNSOL_RESPONSE_NEW_SMS: {
+                 if (RILJ_LOGD) unsljLog(response);
+ 
+-                mMetrics.writeRilNewSms(mInstanceId, SmsSession.Event.Tech.SMS_GSM,
+-                        SmsSession.Event.Format.SMS_FORMAT_3GPP);
+-
+                 // FIXME this should move up a layer
+                 String a[] = new String[2];
+ 
+@@ -3456,9 +3422,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+             case RIL_UNSOL_RESPONSE_CDMA_NEW_SMS:
+                 if (RILJ_LOGD) unsljLog(response);
+ 
+-                mMetrics.writeRilNewSms(mInstanceId, SmsSession.Event.Tech.SMS_CDMA,
+-                        SmsSession.Event.Format.SMS_FORMAT_3GPP2);
+-
+                 SmsMessage sms = (SmsMessage) ret;
+ 
+                 if (mCdmaSmsRegistrant != null) {
+@@ -3621,8 +3584,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+             case RIL_UNSOL_SRVCC_STATE_NOTIFY: {
+                 if (RILJ_LOGD) unsljLogRet(response, ret);
+ 
+-                mMetrics.writeRilSrvcc(mInstanceId, ((int[])ret)[0]);
+-
+                 if (mSrvccStateRegistrants != null) {
+                     mSrvccStateRegistrants
+                             .notifyRegistrants(new AsyncResult(null, ret, null));
+@@ -4287,8 +4248,6 @@ public class RIL extends BaseCommands implements CommandsInterface {
+         response[2] = (char) p.readInt();    // alertPitch
+         response[3] = (char) p.readInt();    // signal
+ 
+-        mMetrics.writeRilCallRing(mInstanceId, response);
+-
+         return response;
+     }
+ 
+-- 
+2.13.0
+

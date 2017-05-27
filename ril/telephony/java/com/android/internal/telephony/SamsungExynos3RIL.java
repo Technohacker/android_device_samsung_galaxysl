@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-sdfagvfedrlkvjasdocjwsedhikcewds
+
 package com.android.internal.telephony;
 
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ import android.telephony.SignalStrength;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
+import android.telephony.ModemActivityInfo;
 import static com.android.internal.telephony.RILConstants.*;
 
 import com.android.internal.telephony.CallForwardInfo;
@@ -191,7 +192,7 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
             case RIL_REQUEST_SWITCH_WAITING_OR_HOLDING_AND_ACTIVE: ret =  responseVoid(p); break;
             case RIL_REQUEST_CONFERENCE: ret =  responseVoid(p); break;
             case RIL_REQUEST_UDUB: ret =  responseVoid(p); break;
-            case RIL_REQUEST_LAST_CALL_FAIL_CAUSE: ret =  responseLastCallFailCause(p); break;
+            case RIL_REQUEST_LAST_CALL_FAIL_CAUSE: ret =  responseFailCause(p); break;
             case RIL_REQUEST_SIGNAL_STRENGTH: ret =  responseSignalStrength(p); break;
             case RIL_REQUEST_VOICE_REGISTRATION_STATE: ret =  responseVoiceRegistrationState(p); break;
             case RIL_REQUEST_DATA_REGISTRATION_STATE: ret =  responseStrings(p); break;
@@ -303,6 +304,10 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
             case RIL_REQUEST_SHUTDOWN: ret = responseVoid(p); break;
             case RIL_REQUEST_GET_RADIO_CAPABILITY: ret =  responseRadioCapability(p); break;
             case RIL_REQUEST_SET_RADIO_CAPABILITY: ret =  responseRadioCapability(p); break;
+            case RIL_REQUEST_START_LCE: ret = responseLceStatus(p); break;
+            case RIL_REQUEST_STOP_LCE: ret = responseLceStatus(p); break;
+            case RIL_REQUEST_PULL_LCEDATA: ret = responseLceData(p); break;
+            case RIL_REQUEST_GET_ACTIVITY_INFO: ret = responseActivityData(p); break;
             default:
                 throw new RuntimeException("Unrecognized solicited response: " + rr.mRequest);
                 //break;
@@ -359,6 +364,11 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
                         }
                         mIccStatusChangedRegistrants.notifyRegistrants();
                     }
+                    break;
+                case RIL_REQUEST_GET_ACTIVITY_INFO:
+                    ret = new ModemActivityInfo(0, 0, 0,
+                            new int [ModemActivityInfo.TX_POWER_LEVELS], 0, 0);
+                    error = 0;
                     break;
             }
 
@@ -723,13 +733,13 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
         return response;
     }
 
-    protected Object
+/*    protected Object
     responseLastCallFailCause(Parcel p) {
         int response[] = (int[])responseInts(p);
 
         return response;
     }
-
+*/
     @Override
     protected Object
     responseSignalStrength(Parcel p) {
@@ -838,7 +848,7 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
         return response;
     }
 
-    @Override
+/*    @Override
     protected Object
     responseSetupDataCall(Parcel p) {
         DataCallResponse dataCall = new DataCallResponse();
@@ -931,7 +941,7 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
 
         super.deactivateDataCall(cid, reason, result);
     }
-
+*/
     protected Object
     responseCdmaSubscription(Parcel p) {
         String response[] = (String[])responseStrings(p);

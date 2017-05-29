@@ -4,9 +4,6 @@ $(call inherit-product, vendor/cm/config/telephony.mk)
 # Inherit from the common Open Source product configuration
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
 
-# Set boot animation size
-TARGET_BOOTANIMATION_SIZE := 480x280
-
 # Inherit from our Lineage product configuration
 $(call inherit-product, vendor/cm/config/common.mk)
 

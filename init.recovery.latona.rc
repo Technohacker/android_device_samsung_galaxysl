@@ -1,5 +1,10 @@
 import usb.rc
 
 on boot
+    # LVM: Wait for block devices to become available, then set up LVM volumes
+    wait /dev/block/mmcblk0p1
+    exec /lvm/sbin/lvm vgscan --mknodes --ignorelockingfailure
+    exec /lvm/sbin/lvm vgchange -aly --ignorelockingfailure
+
     # mass_storage support
     setprop sys.usb.config mass_storage,adb

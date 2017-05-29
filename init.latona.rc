@@ -10,25 +10,20 @@ on init
     export DEFAULT_BASEIMAGE /system/lib/dsp/baseimage.dof
     export QOSDYN_FILE /system/lib/dsp/qosdyn_3430.dll64P
 
-    symlink /storage/sdcard0 /sdcard
-    symlink /storage/sdcard0 /mnt/sdcard
-    symlink /storage/sdcard1 /emmc
-    symlink /storage/sdcard1 /mnt/emmc
-    
-    # By default, primary storage is physical
-    setprop ro.vold.primary_physical 1
-    
-    #   Prevents permission denied error for telephony
+    # Prevents permission denied error for telephony
     chmod 0644 /proc/cmdline
 
 on fs
+    wait /dev/block/mmcblk0p1
+    exec u:r:init:s0 root -- /lvm/sbin/lvm vgscan --mknodes --ignorelockingfailure
+    exec u:r:init:s0 root -- /lvm/sbin/lvm vgchange -aly --ignorelockingfailure
 
     mkdir /radio 0775 radio radio
     mkdir /efs 0775 radio radio
 
+    mount ext4 /dev/lvpool/system /system
     mount yaffs2 mtd@efs /efs
     mount yaffs2 mtd@radio /radio
-    mount yaffs2 mtd@system /system
 
     mount_all fstab.latona
     swapon_all fstab.latona

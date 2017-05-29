@@ -272,6 +272,10 @@ PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_COPY_FILES += \
 	device/samsung/galaxysl/updater.sh:updater.sh
 
+# LVM setup
+PRODUCT_COPY_FILES += \
+	device/samsung/galaxysl/setup-lvm.sh:setup-lvm.sh
+
 # bml_over_mtd
 PRODUCT_COPY_FILES += \
 device/samsung/galaxysl/bml_over_mtd.sh:bml_over_mtd.sh

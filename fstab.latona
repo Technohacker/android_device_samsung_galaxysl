@@ -3,14 +3,13 @@
 # The filesystem that contains the filesystem checker binary (typically /system) cannot
 # specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
 
-boot                    /boot         mtd        defaults                                               recoveryonly
-recovery                /recovery     mtd        defaults                                               recoveryonly
-radio                   /radio        mtd        defaults                                               recoveryonly
-system                  /system       yaffs2     defaults                                               recoveryonly
-/dev/block/mmcblk0p2    /cache      ext4    noatime,nosuid,nodev,errors=panic    wait,check
-/dev/block/mmcblk0p3    /data      ext4    noatime,nosuid,nodev,errors=panic,discard,noauto_da_alloc    wait,check
+boot                    /boot         mtd        defaults                                                   recoveryonly
+recovery                /recovery     mtd        defaults                                                   recoveryonly
+radio                   /radio        mtd        defaults                                                   recoveryonly
+/dev/lvpool/system      /system       ext4       defaults                                                   wait,recoveryonly
+/dev/lvpool/cache       /cache        ext4       noatime,nosuid,nodev,errors=panic                          wait,check
+/dev/lvpool/data        /data         ext4       noatime,nosuid,nodev,errors=panic,discard,noauto_da_alloc  wait,check
 
-/devices/platform/omap/omap_hsmmc.1/mmc_host/*    auto    auto		defaults		voldmanaged=sdcard0:1,nonremovable,noemulatedsd
 /devices/platform/omap/omap_hsmmc.0/mmc_host/*    auto    auto		defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 
 # zRAM

@@ -24,6 +24,7 @@ UTILITIES_DIR = os.path.join(TARGET_DIR, 'utilities')
 def FullOTA_Assertions(info):
   info.output_zip.write(os.path.join(TARGET_DIR, "modem.bin"), "modem.bin")
   info.output_zip.write(os.path.join(TARGET_DIR, "updater.sh"), "updater.sh")
+  info.output_zip.write(os.path.join(TARGET_DIR, "setup-lvm.sh"), "setup-lvm.sh")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "make_ext4fs"), "make_ext4fs")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "busybox"), "busybox")
   info.output_zip.write(os.path.join(UTILITIES_DIR, "flash_image"), "flash_image")
@@ -37,6 +38,9 @@ def FullOTA_Assertions(info):
   info.script.AppendExtra(
         ('package_extract_file("updater.sh", "/tmp/updater.sh");\n'
          'set_metadata("/tmp/updater.sh", "uid", 0, "gid", 0, "mode", 0777);'))
+  info.script.AppendExtra(
+        ('package_extract_file("setup-lvm.sh", "/tmp/setup-lvm.sh");\n'
+         'set_metadata("/tmp/setup-lvm.sh", "uid", 0, "gid", 0, "mode", 0777);'))
   info.script.AppendExtra(
        ('package_extract_file("make_ext4fs", "/tmp/make_ext4fs");\n'
         'set_metadata("/tmp/make_ext4fs", "uid", 0, "gid", 0, "mode", 0777);'))

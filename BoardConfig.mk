@@ -115,10 +115,15 @@ BOARD_CHARGER_DISABLE_INIT_BLANK := true
 # Enable WEBGL in WebKit
 ENABLE_WEBGL := true
 
+# libstagefright
+TARGET_HAS_LEGACY_CAMERA_HAL1 := true
+
 # OMX
 HARDWARE_OMX := true
 ifdef HARDWARE_OMX
-OMX_JPEG := true
+BUILD_WITH_TI_AUDIO := 1
+BUILD_JPEG_DECODER := 1
+#OMX_JPEG := true
 OMX_VENDOR := ti
 OMX_VENDOR_INCLUDES := \
    hardware/ti/omx/system/src/openmax_il/omx_core/inc \

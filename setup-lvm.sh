@@ -35,8 +35,13 @@
     /lvm/sbin/lvm vgcreate lvpool /dev/block/mmcblk0p1 /dev/block/mmcblk0p2 /dev/block/mmcblk0p3
 
     # create logical volumes
-    /lvm/sbin/lvm lvcreate -L 600M -n system lvpool
-    /lvm/sbin/lvm lvcreate -L 100M -n cache lvpool
+    /lvm/sbin/lvm lvcreate -L 670M -n system lvpool
+    /lvm/sbin/lvm lvcreate -L 30M -n cache lvpool
     /lvm/sbin/lvm lvcreate -L 2.98G -n data lvpool
+    
+    # format the logical volumes
+    /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /system /dev/lvpool/system
+    /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /cache /dev/lvpool/cache
+    /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /data /dev/lvpool/data
 
 exit 0 

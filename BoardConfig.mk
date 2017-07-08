@@ -115,9 +115,6 @@ BOARD_CHARGER_DISABLE_INIT_BLANK := true
 # Enable WEBGL in WebKit
 ENABLE_WEBGL := true
 
-# libstagefright
-TARGET_HAS_LEGACY_CAMERA_HAL1 := true
-
 # OMX
 HARDWARE_OMX := true
 ifdef HARDWARE_OMX

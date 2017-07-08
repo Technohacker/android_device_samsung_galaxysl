@@ -1,0 +1,91 @@
+From e27b67e9523ff4af7e79af3e28695647a34ba700 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Wed, 5 Jul 2017 19:14:28 +0530
+Subject: [PATCH] init: Allow domain-less services to run
+
+Change-Id: Ie7a3e300ed54fcd6f76bbb8a4b68052a23460dfc
+---
+ init/service.cpp | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/init/service.cpp b/init/service.cpp
+index 76e0bc876..d3a03c592 100644
+--- a/init/service.cpp
++++ b/init/service.cpp
+@@ -373,9 +373,6 @@ bool Service::Start() {
+         }
+         if (rc == 0 && scon == mycon) {
+             ERROR("Service %s does not have a SELinux domain defined.\n", name_.c_str());
+-            free(mycon);
+-            free(fcon);
+-            return false;
+         }
+         free(mycon);
+         free(fcon);
+-- 
+2.13.2
+
+From cbee17a6b78397b8a98c689f0ba0bef91abf650d Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Wed, 5 Jul 2017 19:16:17 +0530
+Subject: [PATCH] ion: Shadow libion for TI libion
+
+Change-Id: I2f64e99085f309583bfd3b7a8fbe945e95ee17f3
+---
+ libion/Android.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libion/Android.mk b/libion/Android.mk
+index 6562cd3e9..27915a889 100644
+--- a/libion/Android.mk
++++ b/libion/Android.mk
+@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
+ 
+ include $(CLEAR_VARS)
+ LOCAL_SRC_FILES := ion.c
+-LOCAL_MODULE := libion
++LOCAL_MODULE := ion
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_SHARED_LIBRARIES := liblog
+ LOCAL_C_INCLUDES := $(LOCAL_PATH)/include $(LOCAL_PATH)/kernel-headers
+@@ -12,7 +12,7 @@ include $(BUILD_SHARED_LIBRARY)
+ 
+ include $(CLEAR_VARS)
+ LOCAL_SRC_FILES := ion.c ion_test.c
+-LOCAL_MODULE := iontest
++LOCAL_MODULE := sysiontest
+ LOCAL_MODULE_TAGS := optional tests
+ LOCAL_C_INCLUDES := $(LOCAL_PATH)/include $(LOCAL_PATH)/kernel-headers
+ LOCAL_SHARED_LIBRARIES := liblog
+-- 
+2.13.2
+
+From b318d78c88bce140a1f1cd4930a8a1c63bbc8ad2 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Wed, 5 Jul 2017 19:18:40 +0530
+Subject: [PATCH] adb: Bypass auth
+
+Change-Id: Ife27a4fddb58d8d159a8e78027cbed3954add6a7
+---
+ adb/daemon/main.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/adb/daemon/main.cpp b/adb/daemon/main.cpp
+index 726d37528..d67c6cb0a 100644
+--- a/adb/daemon/main.cpp
++++ b/adb/daemon/main.cpp
+@@ -170,9 +170,9 @@ int adbd_main(int server_port) {
+     // descriptor will always be open.
+     adbd_cloexec_auth_socket();
+ 
+-    if (ALLOW_ADBD_NO_AUTH && property_get_bool("ro.adb.secure", 0) == 0) {
++//    if (ALLOW_ADBD_NO_AUTH && property_get_bool("ro.adb.secure", 0) == 0) {
+         auth_required = false;
+-    }
++//    }
+ 
+     adbd_auth_init();
+ 
+-- 
+2.13.2
+

@@ -1,0 +1,27 @@
+From 5f3f4410d1b18f22a1898cd9db83f68c2ca8348b Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Wed, 5 Jul 2017 19:11:03 +0530
+Subject: [PATCH] Remove circular dependency in boot.img makefile
+
+Necessary for Samsung devices
+
+Change-Id: I9ebbcf372b2b7d52a91f1a53e5bdd3c1f733131f
+---
+ core/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/core/Makefile b/core/Makefile
+index 31b9faa..b87e232 100644
+--- a/core/Makefile
++++ b/core/Makefile
+@@ -1138,7 +1138,6 @@ endif
+ 
+ $(recovery_uncompressed_ramdisk): $(MKBOOTFS) \
+ 		$(INSTALLED_RAMDISK_TARGET) \
+-		$(INSTALLED_BOOTIMAGE_TARGET) \
+ 		$(INTERNAL_RECOVERYIMAGE_FILES) \
+ 		$(recovery_initrc) $(recovery_sepolicy) \
+ 		$(INSTALLED_2NDBOOTLOADER_TARGET) \
+-- 
+2.13.2
+

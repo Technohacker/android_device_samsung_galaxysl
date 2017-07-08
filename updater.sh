@@ -42,17 +42,33 @@ RADIO_PART=`/tmp/busybox grep radio /proc/mtd | /tmp/busybox awk '{print $1}' | 
 
 # check if LVM binary is present. If not, flash recovery and reboot
 if ! /tmp/busybox test -e /lvm/sbin/lvm ; then
+    if ! /tmp/busybox test -e /tmp/.accept_data_wipe ; then
+        touch /tmp/.accept_data_wipe
+        /tmp/busybox echo "*****************************************"
+        /tmp/busybox echo "* This update WILL ERASE YOUR INTERNAL  *"
+        /tmp/busybox echo "*     SD CARD. Please make a backup     *"
+        /tmp/busybox echo "*  of your data in the internal SD card *"
+        /tmp/busybox echo "* (photos, music, documents, etc.) and  *"
+        /tmp/busybox echo "*    reflash this update to confirm     *"
+        /tmp/busybox echo "*****************************************"
+        exit 3
+    fi
+
+    # Data wipe accepted
+    rm /tmp/.accept_data_wipe
+
     # write new kernel to boot partition
     /tmp/flash_image boot /tmp/boot.img
     if [ "$?" != "0" ] ; then
         exit 3
     fi
+
     /tmp/busybox sync
-    ui_print "**Rebooting to LVM TWRP in 5 seconds***"
-    ui_print "*****Reflash this update package*******"
+    /tmp/busybox echo "**Rebooting to LVM TWRP in 5 seconds***"
+    /tmp/busybox echo "*****Reflash this update package*******"
     /tmp/busybox sleep 5
 
-    /sbin/reboot now
+    /sbin/reboot recovery
     exit 0
 else
     /tmp/setup-lvm.sh
@@ -101,13 +117,13 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
             /tmp/busybox cp -R /efs/ /external_sd/backup/
             
         else
-            ui_print "*****************************************"
-            ui_print "*   No External SD Card was found to    *"
-            ui_print "*  store the EFS backup. Please pull    *"
-            ui_print "*  /cache/backup/efs via adb to your    *"
-            ui_print "* computer to keep a backup of the EFS  *"
-            ui_print "*                partition              *"
-            ui_print "*****************************************"
+            /tmp/busybox echo "*****************************************"
+            /tmp/busybox echo "*   No External SD Card was found to    *"
+            /tmp/busybox echo "*  store the EFS backup. Please pull    *"
+            /tmp/busybox echo "*  /cache/backup/efs via adb to your    *"
+            /tmp/busybox echo "* computer to keep a backup of the EFS  *"
+            /tmp/busybox echo "*                partition              *"
+            /tmp/busybox echo "*****************************************"
         fi
 
     fi

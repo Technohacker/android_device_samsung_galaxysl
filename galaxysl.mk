@@ -306,5 +306,5 @@ PRODUCT_PACKAGES += \
 # of the aspects that require proprietary drivers that aren't
 # commonly available
 $(call add-product-dex-preopt-module-config,services,--compiler-filter=speed)
-#$(call inherit-product, hardware/ti/omap3/omap3.mk)
+$(call inherit-product, hardware/ti/omap3/omap3.mk)
 $(call inherit-product, vendor/samsung/galaxysl/galaxysl-vendor.mk)

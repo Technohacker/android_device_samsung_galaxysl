@@ -226,18 +226,6 @@ on boot
     # Enabling OFF mode
     write /sys/kernel/debug/pm_debug/enable_off_mode 1
 
-    # TODO: Screw up suspend so that it doesn't screw up display
-    write /sys/kernel/debug/pm_debug/cam_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/dss_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/iva2_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/mpu_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/core_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/neon_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/sgx_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/usbhost_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/per_pwrdm/suspend 1
-    write /sys/kernel/debug/pm_debug/wkup_pwrdm/suspend 1
-
     # Enabling Smartreflex
     write /sys/kernel/debug/smartreflex/sr_mpu_iva/autocomp 1
     write /sys/kernel/debug/smartreflex/sr_core/autocomp 1

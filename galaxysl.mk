@@ -190,6 +190,10 @@ DEVICE_PACKAGE_OVERLAYS += device/samsung/galaxysl/overlay
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version=131072
 
+# Destroy EGL context when suspending
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.egl.destroy_after_detach=true
+
 # PowerVR graphics driver configuration
 PRODUCT_COPY_FILES += \
    $(LOCAL_PATH)/etc/powervr.ini:system/etc/powervr.ini

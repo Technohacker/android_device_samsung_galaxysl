@@ -1,0 +1,136 @@
+From d47e4f385b4cdd39e4593864c63678c2c0941e82 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Sat, 8 Jul 2017 12:44:32 +0530
+Subject: [PATCH] controller: Remove BLE asserts
+
+Non-BLE devices will not support BLE, therefore these asserts always
+fail. Disabling these asserts seem to get Bluetooth working
+
+Change-Id: Ic7ea96247b5cfb811a2453b7effc4f08ae6394e6
+---
+ device/src/controller.c | 37 +++++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
+
+diff --git a/device/src/controller.c b/device/src/controller.c
+index 9433ff9..d21fb18 100644
+--- a/device/src/controller.c
++++ b/device/src/controller.c
+@@ -227,6 +227,7 @@ static future_t *start_up(void) {
+   }
+ #endif
+ 
++
+ #if (BLE_INCLUDED == TRUE)
+   ble_supported = last_features_classic_page_index >= 1 && HCI_LE_HOST_SUPPORTED(features_classic[1].as_array);
+   if (ble_supported) {
+@@ -364,13 +365,15 @@ static uint8_t *get_local_supported_codecs(uint8_t *number_of_codecs) {
+ 
+ static const bt_device_features_t *get_features_ble(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return &features_ble;
+ }
+ 
+ static const uint8_t *get_ble_supported_states(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return ble_supported_states;
+ }
+ 
+@@ -421,25 +424,29 @@ static bool supports_ble(void) {
+ 
+ static bool supports_ble_privacy(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return HCI_LE_ENHANCED_PRIVACY_SUPPORTED(features_ble.as_array);
+ }
+ 
+ static bool supports_ble_packet_extension(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return HCI_LE_DATA_LEN_EXT_SUPPORTED(features_ble.as_array);
+ }
+ 
+ static bool supports_ble_connection_parameters_request(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return HCI_LE_CONN_PARAM_REQ_SUPPORTED(features_ble.as_array);
+ }
+ 
+ static bool supports_ble_offload_features(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return ble_offload_features_supported;
+ }
+ 
+@@ -450,7 +457,8 @@ static uint16_t get_acl_data_size_classic(void) {
+ 
+ static uint16_t get_acl_data_size_ble(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return acl_data_size_ble;
+ }
+ 
+@@ -466,7 +474,8 @@ static uint16_t get_acl_packet_size_ble(void) {
+ 
+ static uint16_t get_ble_suggested_default_data_length(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return ble_suggested_default_data_length;
+ }
+ 
+@@ -477,19 +486,22 @@ static uint16_t get_acl_buffer_count_classic(void) {
+ 
+ static uint8_t get_acl_buffer_count_ble(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return acl_buffer_count_ble;
+ }
+ 
+ static uint8_t get_ble_white_list_size(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return ble_white_list_size;
+ }
+ 
+ static uint8_t get_ble_resolving_list_max_size(void) {
+   assert(readable);
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   return ble_resolving_list_max_size;
+ }
+ 
+@@ -499,7 +511,8 @@ static void set_ble_resolving_list_max_size(int resolving_list_max_size) {
+   if (resolving_list_max_size != 0) {
+     assert(readable);
+   }
+-  assert(ble_supported);
++  //TODO:
++  // assert(ble_supported);
+   ble_resolving_list_max_size = resolving_list_max_size;
+ }
+ 
+-- 
+2.13.2
+

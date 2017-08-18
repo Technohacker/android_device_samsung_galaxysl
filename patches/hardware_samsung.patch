@@ -1,0 +1,119 @@
+From 3c529aa74f884a7ebac2eced80ba9335bb7c6a40 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Fri, 4 Aug 2017 08:44:09 +0530
+Subject: [PATCH] galaxysl: RIL fixes
+
+1) Android.mk Add our modem name to build libril
+2) RIL sends isVideo field
+3) Remove callback version check
+4) Use a specific exynos4 enhancement
+5) Use loopback socket instead of Unix socket
+
+Change-Id: I0718033850e4c2508454e43fdd7207c59d91ed09
+---
+ ril/Android.mk                         |  3 +--
+ ril/libril/ril.cpp                     | 10 ----------
+ ril/libril/ril_commands.h              |  8 ++++----
+ ril/libsecril-client/secril-client.cpp |  5 ++---
+ 4 files changed, 7 insertions(+), 19 deletions(-)
+
+diff --git a/ril/Android.mk b/ril/Android.mk
+index 0b76b81..8d0d8f3 100644
+--- a/ril/Android.mk
++++ b/ril/Android.mk
+@@ -20,7 +20,7 @@ ifeq ($(BOARD_VENDOR),samsung)
+ 
+ # libril
+ ifeq ($(BOARD_PROVIDES_LIBRIL),true)
+-ifneq ($(filter m7450 mdm9x35 ss333 tss310 xmm6260 xmm6262 xmm6360 xmm7260,$(BOARD_MODEM_TYPE)),)
++ifneq ($(filter m7450 mdm9x35 ss333 tss310 xmm6160 xmm6260 xmm6262 xmm6360 xmm7260,$(BOARD_MODEM_TYPE)),)
+ include $(RIL_PATH)/libril/Android.mk
+ endif
+ endif
+@@ -30,4 +30,3 @@ SECRIL_CLIENT_DIRS := libsecril-client libsecril-client-sap
+ include $(foreach client_dirs,$(SECRIL_CLIENT_DIRS),$(RIL_PATH)/$(client_dirs)/Android.mk)
+ 
+ endif
+-
+diff --git a/ril/libril/ril.cpp b/ril/libril/ril.cpp
+index 4478ea2..9c6b217 100755
+--- a/ril/libril/ril.cpp
++++ b/ril/libril/ril.cpp
+@@ -2555,18 +2555,13 @@ static int responseCallList(Parcel &p, void *response, size_t responselen) {
+         p.writeInt32(p_cur->isMT);
+         p.writeInt32(p_cur->als);
+         p.writeInt32(p_cur->isVoice);
+-
+-#ifdef NEEDS_VIDEO_CALL_FIELD
+         p.writeInt32(p_cur->isVideo);
+-#endif
+-
+ #ifdef SAMSUNG_NEXT_GEN_MODEM
+         /* Pass CallDetails */
+         p.writeInt32(0);
+         p.writeInt32(0);
+         writeStringToParcel(p, "");
+ #endif
+-
+         p.writeInt32(p_cur->isVoicePrivacy);
+         writeStringToParcel(p, p_cur->number);
+         p.writeInt32(p_cur->numberPresentation);
+@@ -5066,11 +5061,6 @@ RIL_register (const RIL_RadioFunctions *callbacks) {
+         RLOGE("RIL_register: RIL_RadioFunctions * null");
+         return;
+     }
+-    if (callbacks->version < RIL_VERSION_MIN) {
+-        RLOGE("RIL_register: version %d is to old, min version is %d",
+-             callbacks->version, RIL_VERSION_MIN);
+-        return;
+-    }
+ 
+     RLOGE("RIL_register: RIL version %d", callbacks->version);
+ 
+diff --git a/ril/libril/ril_commands.h b/ril/libril/ril_commands.h
+index bdb179a..cfd137e 100644
+--- a/ril/libril/ril_commands.h
++++ b/ril/libril/ril_commands.h
+@@ -32,15 +32,15 @@
+     {RIL_REQUEST_SWITCH_WAITING_OR_HOLDING_AND_ACTIVE, dispatchVoid, responseVoid},
+     {RIL_REQUEST_CONFERENCE, dispatchVoid, responseVoid},
+     {RIL_REQUEST_UDUB, dispatchVoid, responseVoid},
+-#ifndef EXYNOS4_ENHANCEMENTS
+-    {RIL_REQUEST_LAST_CALL_FAIL_CAUSE, dispatchVoid, responseFailCause},
+-#else
++//#ifndef EXYNOS4_ENHANCEMENTS
++//    {RIL_REQUEST_LAST_CALL_FAIL_CAUSE, dispatchVoid, responseFailCause},
++//#else
+     /*
+      * Exynos4 devices send an extra int for LAST_CALL_FAIL_CAUSE
+      * which causes responseFailCause to think it's a string and crash.
+      */
+     {RIL_REQUEST_LAST_CALL_FAIL_CAUSE, dispatchVoid, responseInts},
+-#endif
++//#endif
+     {RIL_REQUEST_SIGNAL_STRENGTH, dispatchVoid, responseRilSignalStrength},
+     {RIL_REQUEST_VOICE_REGISTRATION_STATE, dispatchVoid, responseStrings},
+     {RIL_REQUEST_DATA_REGISTRATION_STATE, dispatchVoid, responseStrings},
+diff --git a/ril/libsecril-client/secril-client.cpp b/ril/libsecril-client/secril-client.cpp
+index e607f00..c6160c6 100755
+--- a/ril/libsecril-client/secril-client.cpp
++++ b/ril/libsecril-client/secril-client.cpp
+@@ -359,8 +359,8 @@ int Connect_RILD(HRilClient client) {
+     client_prv = (RilClientPrv *)(client->prv);
+ 
+     // Open client socket and connect to server.
+-    //client_prv->sock = socket_loopback_client(RILD_PORT, SOCK_STREAM);
+-    client_prv->sock = socket_local_client(MULTI_CLIENT_SOCKET_NAME, ANDROID_SOCKET_NAMESPACE_ABSTRACT, SOCK_STREAM );
++    client_prv->sock = socket_loopback_client(RILD_PORT, SOCK_STREAM);
++    //client_prv->sock = socket_local_client(MULTI_CLIENT_SOCKET_NAME, ANDROID_SOCKET_NAMESPACE_ABSTRACT, SOCK_STREAM );
+ 
+     if (client_prv->sock < 0) {
+         RLOGE("%s: Connecting failed. %s(%d)", __FUNCTION__, strerror(errno), errno);
+@@ -1615,4 +1615,3 @@ static int blockingWrite(int fd, const void *buffer, size_t len) {
+ } // namespace android
+ 
+ // end of file
+-
+-- 
+2.13.4
+

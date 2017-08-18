@@ -13,7 +13,7 @@ TARGET_CPU_VARIANT := cortex-a8
 TARGET_ARCH_VARIANT_FPU := neon
 TARGET_ARCH_LOWMEM := true
 BOARD_VENDOR := samsung
-BOARD_MODEM_TYPE := xmm6180
+BOARD_MODEM_TYPE := xmm6160
 
 TARGET_GLOBAL_CFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp

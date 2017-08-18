@@ -169,6 +169,9 @@ on post-fs-data
     chown radio system /sys/power/dvfslock_ctrl
     chmod 0660 /sys/power/dvfslock_ctrl
 
+    # DSP Bridge
+    chmod 0666 /dev/DspBridge
+
 # proximity
     chown system input /sys/class/input/input3/enable
 

@@ -12,5 +12,5 @@ radio                   /radio        mtd        defaults                       
 
 /devices/platform/omap/omap_hsmmc.0/mmc_host/*    auto    auto		defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 
-# zRAM
-/dev/block/zram0         none          swap      defaults                                                zramsize=134217728
+# zRAM: was zramsize=134217728
+/dev/block/zram0         none          swap      defaults                                                zramsize=268435456

@@ -146,8 +146,8 @@ PRODUCT_PACKAGES += \
 # Support for Browser's saved page feature. This allows
 # for pages saved on previous versions of the OS to be
 # viewed on the current OS.
-PRODUCT_PACKAGES += \
-    libskia_legacy
+ PRODUCT_PACKAGES += \
+    libskia
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -304,6 +304,10 @@ PRODUCT_PACKAGES += \
 # LatinIME
 PRODUCT_PACKAGES += \
 	LatinIME
+
+# 7.0 WebView
+PRODUCT_PACKAGES += \
+	webview
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care

@@ -192,7 +192,7 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
             case RIL_REQUEST_SWITCH_WAITING_OR_HOLDING_AND_ACTIVE: ret =  responseVoid(p); break;
             case RIL_REQUEST_CONFERENCE: ret =  responseVoid(p); break;
             case RIL_REQUEST_UDUB: ret =  responseVoid(p); break;
-            case RIL_REQUEST_LAST_CALL_FAIL_CAUSE: ret =  responseFailCause(p); break;
+            case RIL_REQUEST_LAST_CALL_FAIL_CAUSE: ret =  responseLastCallFailCause(p); break;
             case RIL_REQUEST_SIGNAL_STRENGTH: ret =  responseSignalStrength(p); break;
             case RIL_REQUEST_VOICE_REGISTRATION_STATE: ret =  responseVoiceRegistrationState(p); break;
             case RIL_REQUEST_DATA_REGISTRATION_STATE: ret =  responseStrings(p); break;
@@ -733,13 +733,13 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
         return response;
     }
 
-/*    protected Object
+    protected Object
     responseLastCallFailCause(Parcel p) {
         int response[] = (int[])responseInts(p);
 
         return response;
     }
-*/
+
     @Override
     protected Object
     responseSignalStrength(Parcel p) {
@@ -848,7 +848,7 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
         return response;
     }
 
-/*    @Override
+    @Override
     protected Object
     responseSetupDataCall(Parcel p) {
         DataCallResponse dataCall = new DataCallResponse();
@@ -941,7 +941,7 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
 
         super.deactivateDataCall(cid, reason, result);
     }
-*/
+
     protected Object
     responseCdmaSubscription(Parcel p) {
         String response[] = (String[])responseStrings(p);

@@ -116,4 +116,136 @@ index e607f00..c6160c6 100755
 -
 -- 
 2.13.4
+From b61a4090d93013fea02f5d03b862ea3c4b805494 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Fri, 25 Aug 2017 18:19:04 +0530
+Subject: [PATCH] ril: More fixes
+
+1) Add correct modem type for the Galaxy SL (XMM6160)
+2) responseInts on HSDPA_STATE_CHANGED
+3) Prevent wakelocks on certain requests
+
+Change-Id: I941eac4c9dabdc9e9987883e4b4115c4bd73438d
+---
+ .../include/telephony/ril_unsol_commands_vendor.h  |  2 +-
+ ril/libril/ril.cpp                                 | 31 ++++++++++++++++++++++
+ ril/libril/ril_commands.h                          |  4 +--
+ 3 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/ril/libril/include/telephony/ril_unsol_commands_vendor.h b/ril/libril/include/telephony/ril_unsol_commands_vendor.h
+index 0a9b657..1f7e008 100644
+--- a/ril/libril/include/telephony/ril_unsol_commands_vendor.h
++++ b/ril/libril/include/telephony/ril_unsol_commands_vendor.h
+@@ -30,7 +30,7 @@
+     {RIL_UNSOL_SAP, responseVoid, WAKE_PARTIAL}, // 11013
+     {11014, NULL, WAKE_PARTIAL},
+     {RIL_UNSOL_SIM_SMS_STORAGE_AVAILALE, responseVoid, WAKE_PARTIAL}, // 11015
+-    {RIL_UNSOL_HSDPA_STATE_CHANGED, responseVoid, WAKE_PARTIAL}, // 11016
++    {RIL_UNSOL_HSDPA_STATE_CHANGED, responseInts, WAKE_PARTIAL}, // 11016
+     {RIL_UNSOL_WB_AMR_STATE, responseInts, WAKE_PARTIAL}, // 11017
+     {RIL_UNSOL_TWO_MIC_STATE, responseInts, WAKE_PARTIAL}, // 11018
+     {RIL_UNSOL_DHA_STATE, responseVoid, WAKE_PARTIAL}, // 11019
+diff --git a/ril/libril/ril.cpp b/ril/libril/ril.cpp
+index 9c6b217..ce96e35 100755
+--- a/ril/libril/ril.cpp
++++ b/ril/libril/ril.cpp
+@@ -267,6 +267,7 @@ static void dispatchCallForward(Parcel& p, RequestInfo *pRI);
+ static void dispatchRaw(Parcel& p, RequestInfo *pRI);
+ static void dispatchSmsWrite (Parcel &p, RequestInfo *pRI);
+ static void dispatchDataCall (Parcel& p, RequestInfo *pRI);
++static void dispatchAllowData (Parcel& p, RequestInfo *pRI);
+ static void dispatchVoiceRadioTech (Parcel& p, RequestInfo *pRI);
+ static void dispatchSetInitialAttachApn (Parcel& p, RequestInfo *pRI);
+ static void dispatchCdmaSubscriptionSource (Parcel& p, RequestInfo *pRI);
+@@ -275,6 +276,7 @@ static void dispatchCdmaSms(Parcel &p, RequestInfo *pRI);
+ static void dispatchImsSms(Parcel &p, RequestInfo *pRI);
+ static void dispatchImsCdmaSms(Parcel &p, RequestInfo *pRI, uint8_t retry, int32_t messageRef);
+ static void dispatchImsGsmSms(Parcel &p, RequestInfo *pRI, uint8_t retry, int32_t messageRef);
++static void dispatchImsRegistrationState(Parcel &p, RequestInfo *pRI);
+ static void dispatchCdmaSmsAck(Parcel &p, RequestInfo *pRI);
+ static void dispatchGsmBrSmsCnf(Parcel &p, RequestInfo *pRI);
+ static void dispatchCdmaBrSmsCnf(Parcel &p, RequestInfo *pRI);
+@@ -1446,6 +1448,14 @@ invalid:
+     return;
+ }
+ 
++static void dispatchImsRegistrationState(Parcel &p, RequestInfo *pRI) {
++    if (s_callbacks.version < 4) {
++        RIL_onRequestComplete(pRI, RIL_E_REQUEST_NOT_SUPPORTED, NULL, 0);
++        return;
++    }
++    dispatchVoid(p, pRI);
++}
++
+ static void
+ dispatchImsSms(Parcel &p, RequestInfo *pRI) {
+     int32_t  t;
+@@ -1592,6 +1602,12 @@ invalid:
+ 
+ static void
+ dispatchCdmaBrSmsCnf(Parcel &p, RequestInfo *pRI) {
++
++    if (s_callbacks.version < 4) {
++        RIL_onRequestComplete(pRI, RIL_E_REQUEST_NOT_SUPPORTED, NULL, 0);
++        return;
++    }
++
+     int32_t t;
+     status_t status;
+     int32_t num;
+@@ -1765,6 +1781,8 @@ static void dispatchDataCall(Parcel& p, RequestInfo *pRI) {
+       Parcel p2;
+       p2.appendFrom(&p, 0, pos);
+       p2.writeInt32(numParamsRilV3);
++      /* The RIL requires the type to be RADIO_TECH_GPRS (1), as v3 specs state 0 (CDMA) or 1 (GSM) */
++      writeStringToParcel(p2, "1");
+       for(int i = 0; i < numParamsRilV3; i++) {
+         p2.writeString16(p.readString16());
+       }
+@@ -1830,8 +1848,21 @@ static void dispatchCdmaSubscriptionSource(Parcel& p, RequestInfo *pRI) {
+         RIL_onRequestComplete(pRI, RIL_E_SUCCESS, &cdmaSubscriptionSource, sizeof(int));
+ }
+ 
++static void dispatchAllowData(Parcel &p, RequestInfo *pRI)
++{
++    if (s_callbacks.version < 4) {
++        RIL_onRequestComplete(pRI, RIL_E_REQUEST_NOT_SUPPORTED, NULL, 0);
++        return;
++    }
++    dispatchInts(p, pRI);
++}
++
+ static void dispatchSetInitialAttachApn(Parcel &p, RequestInfo *pRI)
+ {
++    if (s_callbacks.version < 4) {
++        RIL_onRequestComplete(pRI, RIL_E_REQUEST_NOT_SUPPORTED, NULL, 0);
++        return;
++    }
+     RIL_InitialAttachApn pf;
+     int32_t  t;
+     status_t status;
+diff --git a/ril/libril/ril_commands.h b/ril/libril/ril_commands.h
+index cfd137e..f6a5a5c 100644
+--- a/ril/libril/ril_commands.h
++++ b/ril/libril/ril_commands.h
+@@ -134,7 +134,7 @@
+     {RIL_REQUEST_GET_CELL_INFO_LIST, dispatchVoid, responseCellInfoList},
+     {RIL_REQUEST_SET_UNSOL_CELL_INFO_LIST_RATE, dispatchInts, responseVoid},
+     {RIL_REQUEST_SET_INITIAL_ATTACH_APN, dispatchSetInitialAttachApn, responseVoid},
+-    {RIL_REQUEST_IMS_REGISTRATION_STATE, dispatchVoid, responseInts},
++    {RIL_REQUEST_IMS_REGISTRATION_STATE, dispatchImsRegistrationState, responseInts},
+     {RIL_REQUEST_IMS_SEND_SMS, dispatchImsSms, responseSMS},
+     {RIL_REQUEST_SIM_TRANSMIT_APDU_BASIC, dispatchSIM_APDU, responseSIM_IO},
+     {RIL_REQUEST_SIM_OPEN_CHANNEL, dispatchString, responseInts},
+@@ -145,7 +145,7 @@
+     {RIL_REQUEST_NV_WRITE_CDMA_PRL, dispatchRaw, responseVoid},
+     {RIL_REQUEST_NV_RESET_CONFIG, dispatchInts, responseVoid},
+     {RIL_REQUEST_SET_UICC_SUBSCRIPTION, dispatchUiccSubscripton, responseVoid},
+-    {RIL_REQUEST_ALLOW_DATA, dispatchInts, responseVoid},
++    {RIL_REQUEST_ALLOW_DATA, dispatchAllowData, responseVoid},
+     {RIL_REQUEST_GET_HARDWARE_CONFIG, dispatchVoid, responseHardwareConfig},
+     {RIL_REQUEST_SIM_AUTHENTICATION, dispatchSimAuthentication, responseSIM_IO},
+     {RIL_REQUEST_GET_DC_RT_INFO, dispatchVoid, responseDcRtInfo},
+-- 
+2.14.1
 

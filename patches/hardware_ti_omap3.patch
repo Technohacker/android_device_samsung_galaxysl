@@ -1,0 +1,202 @@
+From 3a2662f450f7f75aa8952c67f2b0e5fa4a34b89e Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Fri, 11 Aug 2017 15:59:45 +0530
+Subject: [PATCH 1/4] dspbridge: Fix compilation errors
+
+Change-Id: I432b5bd9125a2963ffbcbeae083491adb034b3f4
+---
+ dspbridge/dynreg/Android.mk    | 2 +-
+ dspbridge/libbridge/Android.mk | 5 ++---
+ dspbridge/libbridge/DSPStrm.c  | 2 --
+ dspbridge/qos/Android.mk       | 2 +-
+ 4 files changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/dspbridge/dynreg/Android.mk b/dspbridge/dynreg/Android.mk
+index 7349ce5..1217ded 100755
+--- a/dspbridge/dynreg/Android.mk
++++ b/dspbridge/dynreg/Android.mk
+@@ -21,7 +21,7 @@ LOCAL_C_INCLUDES += \
+ LOCAL_SHARED_LIBRARIES := \
+ 	libbridge
+ 	
+-LOCAL_CFLAGS += -MD -pipe  -fomit-frame-pointer -Wall  -Wno-trigraphs -Werror-implicit-function-declaration  -fno-strict-aliasing -mapcs -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -msoft-float -Uarm -DMODULE -D__LINUX_ARM_ARCH__=7  -fno-common -DLINUX -DTMS32060 -D_DB_TIOMAP -DOMAP_3430
++LOCAL_CFLAGS += -MD -pipe  -fomit-frame-pointer -Wall  -Wno-trigraphs -Werror-implicit-function-declaration  -fno-strict-aliasing -mabi=aapcs-linux -msoft-float -Uarm -DMODULE -D__LINUX_ARM_ARCH__=7  -fno-common -DLINUX -DTMS32060 -D_DB_TIOMAP -DOMAP_3430
+ 
+ LOCAL_MODULE:= dynreg.out
+ LOCAL_MODULE_TAGS:= optional
+diff --git a/dspbridge/libbridge/Android.mk b/dspbridge/libbridge/Android.mk
+index 7d0809f..c9497f9 100644
+--- a/dspbridge/libbridge/Android.mk
++++ b/dspbridge/libbridge/Android.mk
+@@ -15,11 +15,10 @@ LOCAL_SRC_FILES:= \
+ 	dsptrap.c
+ 
+ LOCAL_C_INCLUDES += \
+-	$(LOCAL_PATH)/inc	
++	$(LOCAL_PATH)/inc
+ 
+-LOCAL_CFLAGS += -pipe -fomit-frame-pointer -Wall  -Wno-trigraphs -Werror-implicit-function-declaration  -fno-strict-aliasing -mapcs -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -msoft-float -Uarm -DMODULE -D__LINUX_ARM_ARCH__=7  -fno-common -DLINUX -DOMAP_3430 -fpic
++LOCAL_CFLAGS += -pipe -fomit-frame-pointer -Wall  -Wno-trigraphs -Werror-implicit-function-declaration  -fno-strict-aliasing -mabi=aapcs-linux -msoft-float -Uarm -DMODULE -D__LINUX_ARM_ARCH__=7  -fno-common -DLINUX -DOMAP_3430 -fpic
+ 
+ LOCAL_MODULE:= libbridge
+ LOCAL_MODULE_TAGS := optional
+ include $(BUILD_SHARED_LIBRARY)
+-
+diff --git a/dspbridge/libbridge/DSPStrm.c b/dspbridge/libbridge/DSPStrm.c
+index bee064b..13dca5d 100644
+--- a/dspbridge/libbridge/DSPStrm.c
++++ b/dspbridge/libbridge/DSPStrm.c
+@@ -84,7 +84,6 @@
+ 
+ /*  ----------------------------------- Others */
+ #include <dsptrap.h>
+-#include <memry.h>
+ 
+ /*  ----------------------------------- This */
+ #include "_dbdebug.h"
+@@ -852,4 +851,3 @@ static int GetStrmInfo(DSP_HSTREAM hStream, struct STRM_INFO *pStrmInfo,
+ 
+ 	return status;
+ }
+-
+diff --git a/dspbridge/qos/Android.mk b/dspbridge/qos/Android.mk
+index 4e8c154..15362f3 100755
+--- a/dspbridge/qos/Android.mk
++++ b/dspbridge/qos/Android.mk
+@@ -17,7 +17,7 @@ LOCAL_SHARED_LIBRARIES := \
+ LOCAL_C_INCLUDES += \
+ 	$(LOCAL_PATH)/../inc
+ 	
+-LOCAL_CFLAGS += -MD -pipe -fomit-frame-pointer -Wall  -Wno-trigraphs -Werror-implicit-function-declaration  -fno-strict-aliasing -mapcs -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -msoft-float -Uarm -DMODULE -D__LINUX_ARM_ARCH__=7  -fno-common -DLINUX -DOMAP_3430 -fpic
++LOCAL_CFLAGS += -MD -pipe -fomit-frame-pointer -Wall  -Wno-trigraphs -Werror-implicit-function-declaration  -fno-strict-aliasing -mabi=aapcs-linux -msoft-float -Uarm -DMODULE -D__LINUX_ARM_ARCH__=7  -fno-common -DLINUX -DOMAP_3430 -fpic
+ 
+ LOCAL_MODULE:= libqos
+ LOCAL_MODULE_TAGS:= optional
+-- 
+2.14.1
+
+
+From 5eb2780aab6a5e40245b231e2af364db475a12e7 Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Fri, 11 Aug 2017 16:00:29 +0530
+Subject: [PATCH 2/4] hwc: Take header from includes
+
+Change-Id: Ife54c61c08b2a6e422e121ea695465f9b2fc4653
+---
+ hwc/hwc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/hwc/hwc.c b/hwc/hwc.c
+index 08bc2ad..5236f6b 100644
+--- a/hwc/hwc.c
++++ b/hwc/hwc.c
+@@ -45,8 +45,7 @@
+ 
+ #define DIV_ROUND_UP(a, b) (((a) + (b) - 1) / (b))
+ 
+-/* For some reason this does not include it without an absolute path, which sucks totally. */
+-#include "../../../../kernel/lge/p970/include/video/dsscomp.h"
++#include "video/dsscomp.h"
+ 
+ #include "hal_public.h"
+ 
+@@ -1001,7 +1000,7 @@ static int omap3_hwc_prepare(struct hwc_composer_device_1 *dev, size_t numDispla
+     num_fb = num.BGR + num.RGB;
+ #ifndef OMAP3_HWC_DISABLE_YUV_OVERLAY
+     /* hack for omap3, overlay can be active only for YUV format */
+-    /* For other formats everything has to go through frame buffer */ 
++    /* For other formats everything has to go through frame buffer */
+ 
+     if (num.NV12 && num_fb <= 1)
+     {
+@@ -1019,7 +1018,7 @@ static int omap3_hwc_prepare(struct hwc_composer_device_1 *dev, size_t numDispla
+         hwc_dev->use_sgx = 1;
+         hwc_dev->swap_rb = is_BGR(hwc_dev->fb_dev->base.format);
+     }
+-  
++
+     if (debug) {
+         ALOGD("prepare (%d) - %s (comp=%d, poss=%d/%d scaled, RGB=%d,BGR=%d,NV12=%d) (ext=%s%s%ddeg%s %dex/%dmx (last %dex,%din)\n",
+              dsscomp->sync_id,
+-- 
+2.14.1
+
+
+From 598eff735690bed49aa8e5869ce701ab498f8a4c Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Fri, 11 Aug 2017 16:00:45 +0530
+Subject: [PATCH 3/4] ion: Fix build
+
+Change-Id: I865fbbb7a74425cf41f83ca493df44a557571aa0
+---
+ ion/Android.mk | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ion/Android.mk b/ion/Android.mk
+index 7ce99a1..2819444 100644
+--- a/ion/Android.mk
++++ b/ion/Android.mk
+@@ -7,6 +7,7 @@ include $(CLEAR_VARS)
+ LOCAL_SRC_FILES := ion.c
+ LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+ LOCAL_C_INCLUDES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
++LOCAL_CFLAGS := -Wno-error=int-conversion
+ LOCAL_MODULE := libion
+ LOCAL_MODULE_TAGS := optional
+ LOCAL_SHARED_LIBRARIES := liblog
+-- 
+2.14.1
+
+
+From c3b9c9023ed7aa51a0b0d554e28c351173554bec Mon Sep 17 00:00:00 2001
+From: Technohacker <technohacker1995@gmail.com>
+Date: Fri, 11 Aug 2017 16:09:56 +0530
+Subject: [PATCH 4/4] omx: Fix video codec build
+
+Change-Id: I9ca4f8500ca4a93d86b5da706a25ffcbb59cc433
+---
+ omx/video/src/openmax_il/video_decode/src/OMX_VideoDec_Utils.c          | 1 -
+ .../src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_HandleBuffers.c | 1 -
+ omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_Parse.c   | 2 ++
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/omx/video/src/openmax_il/video_decode/src/OMX_VideoDec_Utils.c b/omx/video/src/openmax_il/video_decode/src/OMX_VideoDec_Utils.c
+index a0f1c32..04dcc06 100644
+--- a/omx/video/src/openmax_il/video_decode/src/OMX_VideoDec_Utils.c
++++ b/omx/video/src/openmax_il/video_decode/src/OMX_VideoDec_Utils.c
+@@ -61,7 +61,6 @@
+ #ifdef USE_ION
+ #include <sys/mman.h>
+ #include <sys/eventfd.h>
+-#include <ion.h>
+ #endif
+ 
+ #define LOG_NDEBUG 0
+diff --git a/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_HandleBuffers.c b/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_HandleBuffers.c
+index 9adca32..93022ee 100755
+--- a/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_HandleBuffers.c
++++ b/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_HandleBuffers.c
+@@ -68,7 +68,6 @@
+ #ifdef USE_ION
+ #include <sys/mman.h>
+ #include <sys/eventfd.h>
+-#include <ion.h>
+ #endif
+ 
+ #define LOG_NDEBUG 0
+diff --git a/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_Parse.c b/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_Parse.c
+index e08c305..ead39b0 100755
+--- a/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_Parse.c
++++ b/omx/video/src/openmax_il/video_decode_ittiam/src/OMX_VideoDec_Parse.c
+@@ -73,6 +73,8 @@
+ #define LOG_TAG "720p_OMX_VidDec_Parse"
+ #include <utils/Log.h>
+ 
++void h264_scaling_list(OMX_U32 size, OMX_U32 *nRbspPosition, OMX_U8 *nRbspByte);
++
+ #ifdef PARSE_HEADER
+ 
+ /*****************************************************************************/
+-- 
+2.14.1
+

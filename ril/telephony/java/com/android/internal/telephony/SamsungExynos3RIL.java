@@ -735,9 +735,12 @@ public class SamsungExynos3RIL extends RIL implements CommandsInterface {
 
     protected Object
     responseLastCallFailCause(Parcel p) {
-        int response[] = (int[])responseInts(p);
-
-        return response;
+        LastCallFailCause failCause = new LastCallFailCause();
+        failCause.causeCode = p.readInt();
+        if (p.dataAvail() > 0) {
+          failCause.vendorCause = p.readString();
+        }
+        return failCause;
     }
 
     @Override
